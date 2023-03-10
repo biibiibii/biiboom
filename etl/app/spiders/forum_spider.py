@@ -7,14 +7,17 @@ from app.settings import settings
 
 class ForumSpider(feapder.AirSpider):
     __custom_setting__ = dict(
-        # ITEM_PIPELINES=["feapder.pipelines.mongo_pipeline.MongoPipeline"],
+        ITEM_PIPELINES=["feapder.pipelines.mongo_pipeline.MongoPipeline"],
         SPIDER_MAX_RETRY_TIMES=1,
         MONGO_IP=settings.mongodb_host,
         MONGO_PORT=settings.mongodb_port,
         MONGO_DB=settings.mongodb_database,
         MONGO_USER_NAME=settings.mongodb_username,
         MONGO_USER_PASS=settings.mongodb_password,
-        LOG_LEVEL="DEBUG",
+        LOG_LEVEL=settings.log_level,
+        ITEM_FILTER_ENABLE=True,
+        REDISDB_IP_PORTS=settings.redisdb_ip_ports,
+        REDISDB_USER_PASS=settings.redisdb_user_pass,
     )
 
     def __init__(self, request_nodes: list[RequestNode], thread_count=None):
@@ -36,6 +39,7 @@ class ForumSpider(feapder.AirSpider):
                 title=td.xpath(rule.title).extract_first(),
                 url=td.xpath(rule.url).extract_first(),
             )
+            node.parent_node = request.node.unique_id
             if rule.desc:
                 node.desc = td.xpath(rule.desc).extract_first()
             if rule.extra:
@@ -44,6 +48,7 @@ class ForumSpider(feapder.AirSpider):
                     extra[item] = td.xpath(rule.extra[item]).extract()
                 node.extra = extra
             nodes.append(node)
+            yield node
             log.debug(f"node: {node}")
         log.info(f"node size: {len(nodes)}")
 

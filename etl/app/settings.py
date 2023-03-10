@@ -4,11 +4,14 @@ from app.model import RequestNode, ResponseType, MatchRule
 
 
 class Settings(BaseSettings):
+    log_level = "DEBUG"
     mongodb_database = "news_spider"
     mongodb_host = "127.0.0.1"
     mongodb_port = 27017
-    mongodb_username = ""
-    mongodb_password = ""
+    mongodb_username = "root"
+    mongodb_password = "root"
+    redisdb_ip_ports = "127.0.0.1:6379"
+    redisdb_user_pass = ""
 
     hello_node = RequestNode(
         url="https://ethereum-magicians.org/",

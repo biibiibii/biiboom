@@ -1,3 +1,5 @@
+import datetime
+import unittest
 from enum import Enum
 
 from feapder import Item
@@ -37,10 +39,26 @@ class Node(Item):
     url: str
     title: str
     desc: str = None
+    parent_node: str
     extra: dict[str, list] = None
     unique_id: str = None
+    _last_updated_time: datetime = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if self.url:
             self.unique_id = Utils.unique_hash(self.url)
+        self._last_updated_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    @property
+    def fingerprint(self):
+        return self.unique_id
+
+
+class NodeTestCase(unittest.TestCase):
+    def test_datetime(self):
+        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+
+if __name__ == "__main__":
+    unittest.main()
