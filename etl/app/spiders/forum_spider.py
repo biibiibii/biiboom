@@ -1,8 +1,66 @@
+import unittest
+from typing import Any
+
 import feapder
-from feapder.utils.log import log
+from json2xml import json2xml
+from lxml import etree
 
 from app.model import RequestNode, ResponseType, MatchRule, Node
-from app.settings import settings
+from app.settings import settings, logger
+
+
+def parse_html(request, response) -> list[Any]:
+    logger.debug(f"parse_html")
+    logger.debug(f"request param: {request.node}")
+    rule = request.node.rule
+    tds = response.xpath(rule.container)
+    logger.debug(len(tds))
+    nodes = []
+    for td in tds:
+        node = Node(
+            title=td.xpath(rule.title).extract_first(),
+            url=td.xpath(rule.url).extract_first(),
+        )
+        node.parent_node = request.node.unique_id
+        if rule.desc:
+            node.desc = td.xpath(rule.desc).extract_first()
+        if rule.extra:
+            extra = dict()
+            for item in rule.extra:
+                extra[item] = td.xpath(rule.extra[item]).extract()
+            node.extra = extra
+        nodes.append(node)
+        logger.debug(f"node: {node}")
+    logger.info(f"node size: {len(nodes)}")
+    return nodes
+
+
+def parse_json(request, response):
+    logger.debug(f"parse json: {response.json}")
+    nodes = []
+    xml_data = json2xml.Json2xml(response.json).to_xml()
+    doc = etree.fromstring(xml_data)
+    rule = request.node.rule
+    topics = doc.xpath(rule.container)
+    for item in topics[0]:
+        node = Node(
+            title=item.xpath(rule.title)[0],
+            url=item.xpath(rule.url)[0],
+        )
+        node.parent_node = request.node.unique_id
+        if rule.desc:
+            node.desc = item.xpath(rule.desc)[0]
+        if rule.created_at:
+            node.created_at = item.xpath(rule.created_at)[0]
+        if rule.extra:
+            extra = dict()
+            for i in rule.extra:
+                extra[i] = item.xpath(rule.extra[i])
+            node.extra = extra
+        logger.debug(f"node: {node}")
+        nodes.append(node)
+    logger.info(f"node size: {len(nodes)}")
+    return nodes
 
 
 class ForumSpider(feapder.AirSpider):
@@ -14,10 +72,10 @@ class ForumSpider(feapder.AirSpider):
         MONGO_DB=settings.mongodb_database,
         MONGO_USER_NAME=settings.mongodb_username,
         MONGO_USER_PASS=settings.mongodb_password,
-        LOG_LEVEL=settings.log_level,
-        ITEM_FILTER_ENABLE=True,
-        REDISDB_IP_PORTS=settings.redisdb_ip_ports,
-        REDISDB_USER_PASS=settings.redisdb_user_pass,
+        LOG_LEVEL="INFO",
+        # ITEM_FILTER_ENABLE=True,
+        # REDISDB_IP_PORTS=settings.redisdb_ip_ports,
+        # REDISDB_USER_PASS=settings.redisdb_user_pass,
     )
 
     def __init__(self, request_nodes: list[RequestNode], thread_count=None):
@@ -29,45 +87,51 @@ class ForumSpider(feapder.AirSpider):
             yield feapder.Request(item.url, node=item)
 
     def parse(self, request, response):
-        log.debug(f"request param: {request.node}")
-        rule = request.node.rule
-        tds = response.xpath(rule.container)
-        log.debug(len(tds))
-        nodes = []
-        for td in tds:
-            node = Node(
-                title=td.xpath(rule.title).extract_first(),
-                url=td.xpath(rule.url).extract_first(),
-            )
-            node.parent_node = request.node.unique_id
-            if rule.desc:
-                node.desc = td.xpath(rule.desc).extract_first()
-            if rule.extra:
-                extra = dict()
-                for item in rule.extra:
-                    extra[item] = td.xpath(rule.extra[item]).extract()
-                node.extra = extra
-            nodes.append(node)
-            yield node
-            log.debug(f"node: {node}")
-        log.info(f"node size: {len(nodes)}")
+        logger.debug(f"response type: {request.node.response_type}")
+        if request.node.response_type == ResponseType.html:
+            nodes = parse_html(request, response)
+        elif request.node.response_type == ResponseType.json:
+            nodes = parse_json(request, response)
+        else:
+            raise NotImplementedError("only support html/json")
+        for item in nodes:
+            yield item
+
+
+class ForumSpiderTestCase(unittest.TestCase):
+    def test_html(self):
+        html_node = RequestNode(
+            url="https://forum.bnbchain.org/",
+            response_type=ResponseType.html,
+            rule=MatchRule(
+                container='.//td[@class="main-link"]',
+                title='.//a[contains(@class,"title raw-link raw-topic-link")]/text()',
+                url='.//a[contains(@class,"title raw-link raw-topic-link")]/@href',
+                extra={
+                    "category": './/span[@class="category-name"]/text()',
+                    "tags": './/a[contains(@class,"discourse-tag")]/text()',
+                },
+            ),
+        )
+
+        ForumSpider(request_nodes=[html_node]).start()
+
+    def test_json(self):
+        json_node = RequestNode(
+            url="https://forum.bnbchain.org/latest.json?&page=0",
+            response_type=ResponseType.json,
+            rule=MatchRule(
+                container="//topic_list/topics",
+                title="title/text()",
+                url="slug/text()",
+                created_at="created_at/text()",
+                extra={
+                    "tags": "tags/item/text()",
+                },
+            ),
+        )
+        ForumSpider(request_nodes=[json_node]).start()
 
 
 if __name__ == "__main__":
-    url = "https://ethereum-magicians.org/"
-    url = "https://forum.bnbchain.org/"
-
-    hello_node = RequestNode(
-        url=url,
-        response_type=ResponseType.html,
-        rule=MatchRule(
-            container='.//td[@class="main-link"]',
-            title='.//a[contains(@class,"title raw-link raw-topic-link")]/text()',
-            url='.//a[contains(@class,"title raw-link raw-topic-link")]/@href',
-            extra={
-                "category": './/span[@class="category-name"]/text()',
-                "tags": './/a[contains(@class,"discourse-tag")]/text()',
-            },
-        ),
-    )
-    ForumSpider([hello_node]).start()
+    unittest.main()

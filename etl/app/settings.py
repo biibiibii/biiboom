@@ -1,9 +1,11 @@
 from pydantic import BaseSettings
 
+from app.log_handler import LogHandler
 from app.model import RequestNode, ResponseType, MatchRule
 
 
 class Settings(BaseSettings):
+    log_name = "etl"
     log_level = "DEBUG"
     mongodb_database = "news_spider"
     mongodb_host = "127.0.0.1"
@@ -25,3 +27,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+logger = LogHandler(settings.log_name, settings.log_level)

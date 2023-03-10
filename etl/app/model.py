@@ -18,6 +18,7 @@ class MatchRule(BaseModel):
     title: str
     url: str
     desc: str = None
+    created_at: str = None
     extra: dict[str, str] = None
 
     @property
@@ -42,13 +43,14 @@ class Node(Item):
     parent_node: str
     extra: dict[str, list] = None
     unique_id: str = None
+    created_at: datetime = None
     _last_updated_time: datetime = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if self.url:
             self.unique_id = Utils.unique_hash(self.url)
-        self._last_updated_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self._last_updated_time = datetime.datetime.utcnow()
 
     @property
     def fingerprint(self):
@@ -58,6 +60,7 @@ class Node(Item):
 class NodeTestCase(unittest.TestCase):
     def test_datetime(self):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        print(datetime.datetime.utcnow())
 
 
 if __name__ == "__main__":
