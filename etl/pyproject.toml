@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "news"
+version = "0.1.0"
+description = ""
+authors = ["xfu <angerpeanut@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.9.16"
+feapder = "^1.8.5"
+pydantic = "^1.10.6"
+dynaconf = "^3.1.12"
+black = "^23.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
