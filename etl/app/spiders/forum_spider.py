@@ -45,7 +45,9 @@ def parse_json(request, response):
     for item in topics[0]:
         node = Node(
             title=item.xpath(rule.title)[0],
-            url=item.xpath(rule.url)[0],
+            url=f"{request.node.jump_base_url}{item.xpath(rule.url)[0]}"
+            if request.node.jump_base_url
+            else item.xpath(rule.url)[0],
         )
         node.parent_node = request.node.unique_id
         if rule.desc:
@@ -66,24 +68,27 @@ def parse_json(request, response):
 class ForumSpider(feapder.AirSpider):
     __custom_setting__ = dict(
         ITEM_PIPELINES=["feapder.pipelines.mongo_pipeline.MongoPipeline"],
-        SPIDER_MAX_RETRY_TIMES=1,
+        SPIDER_MAX_RETRY_TIMES=2,
+        SPIDER_THREAD_COUNT=settings.max_thread_count,
         MONGO_IP=settings.mongodb_host,
         MONGO_PORT=settings.mongodb_port,
         MONGO_DB=settings.mongodb_database,
         MONGO_USER_NAME=settings.mongodb_username,
         MONGO_USER_PASS=settings.mongodb_password,
         LOG_LEVEL="INFO",
-        # ITEM_FILTER_ENABLE=True,
-        # REDISDB_IP_PORTS=settings.redisdb_ip_ports,
-        # REDISDB_USER_PASS=settings.redisdb_user_pass,
+        ITEM_FILTER_ENABLE=True,
+        REDISDB_IP_PORTS=settings.redisdb_ip_ports,
+        REDISDB_USER_PASS=settings.redisdb_user_pass,
     )
 
     def __init__(self, request_nodes: list[RequestNode], thread_count=None):
+        logger.info(f"start {self.__class__.__name__}...")
         super().__init__(thread_count)
         self.request_nodes = request_nodes
 
     def start_requests(self):
         for item in self.request_nodes:
+            logger.info(f"start request url: {item.url}")
             yield feapder.Request(item.url, node=item)
 
     def parse(self, request, response):
@@ -119,6 +124,7 @@ class ForumSpiderTestCase(unittest.TestCase):
     def test_json(self):
         json_node = RequestNode(
             url="https://forum.bnbchain.org/latest.json?&page=0",
+            jump_base_url="https://forum.bnbchain.org/t/",
             response_type=ResponseType.json,
             rule=MatchRule(
                 container="//topic_list/topics",

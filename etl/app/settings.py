@@ -1,12 +1,11 @@
 from pydantic import BaseSettings
 
 from app.log_handler import LogHandler
-from app.model import RequestNode, ResponseType, MatchRule
 
 
 class Settings(BaseSettings):
     log_name = "etl"
-    log_level = "DEBUG"
+    log_level = "INFO"
     mongodb_database = "news_spider"
     mongodb_host = "127.0.0.1"
     mongodb_port = 27017
@@ -15,15 +14,14 @@ class Settings(BaseSettings):
     redisdb_ip_ports = "127.0.0.1:6379"
     redisdb_user_pass = ""
 
-    hello_node = RequestNode(
-        url="https://ethereum-magicians.org/",
-        response_type=ResponseType.html,
-        rule=MatchRule(
-            container='.//td[@class="main-link"]',
-            title='.//a[contains(@class,"title raw-link raw-topic-link")]/text()',
-            url='.//a[contains(@class,"title raw-link raw-topic-link")]/@href',
-        ),
-    )
+    max_thread_count = 3
+
+    forum_urls = [
+        "https://forum.bnbchain.org",
+        "https://ethereum-magicians.org",
+        "https://forum.cosmos.network",
+        "https://forum.polkadot.network",
+    ]
 
 
 settings = Settings()

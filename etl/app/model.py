@@ -26,14 +26,24 @@ class MatchRule(BaseModel):
         return Utils.unique_hash(self.unique_id)
 
 
+class UrlNode(BaseModel):
+    url: str
+    jump_base_url: str = None
+
+
 class RequestNode(BaseModel):
     url: str
+    jump_base_url: str = None
     response_type: ResponseType
     rule: MatchRule
 
     @property
     def unique_id(self) -> str:
         return Utils.unique_hash(self.url)
+
+    @classmethod
+    def from_dict(cls, url_list: list[UrlNode], rule_dict: dict) -> "list[RequestNode]":
+        return [__class__(**{**item.dict(), **rule_dict}) for item in url_list]
 
 
 class Node(Item):
@@ -61,6 +71,25 @@ class NodeTestCase(unittest.TestCase):
     def test_datetime(self):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         print(datetime.datetime.utcnow())
+
+    def test_request_node(self):
+        forum_request = UrlNode(
+            url="https://forum.bnbchain.org/latest.json?&page=0",
+            jump_base_url="https://forum.bnbchain.org/t/",
+        )
+        forum_rule = dict(
+            response_type=ResponseType.json,
+            rule=MatchRule(
+                container="//topic_list/topics",
+                title="title/text()",
+                url="slug/text()",
+                created_at="created_at/text()",
+                extra={
+                    "tags": "tags/item/text()",
+                },
+            ),
+        )
+        print(RequestNode.from_dict([forum_request], forum_rule))
 
 
 if __name__ == "__main__":

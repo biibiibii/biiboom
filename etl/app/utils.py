@@ -26,6 +26,9 @@ class UtilsTestCase(unittest.TestCase):
             Utils.unique_hash(url),
             "9c949a015983d1dcd6e3336008012563c918d7f9c343d8a50a65b38308f2b7dc",
         )
+        url = "https://forum.bnbchain.org/t/bep-172-draft-improvement-on-bsc-validator-committing-stability"
+        url_hash = "916a875a3f6a05a1ac6e01bca93c39777c8bf0bb261ba6085d9bc0e197774a45"
+        self.assertEqual(Utils.unique_hash(url), url_hash)
 
 
 if __name__ == "__main__":
