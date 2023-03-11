@@ -5,13 +5,22 @@ from app.model import ResponseType, MatchRule
 
 forum_rule = dict(
     response_type=ResponseType.json,
+    # rule=MatchRule(
+    #     container="//topic_list/topics",
+    #     title="title/text()",
+    #     url="slug/text()",
+    #     created_at="created_at/text()",
+    #     extra={
+    #         "tags": "tags/item/text()",
+    #     },
+    # ),
     rule=MatchRule(
-        container="//topic_list/topics",
-        title="title/text()",
-        url="slug/text()",
-        created_at="created_at/text()",
+        container="topic_list.topics",
+        title="title",
+        url="slug",
+        created_at="created_at",
         extra={
-            "tags": "tags/item/text()",
+            "tags": "tags",
         },
     ),
 )

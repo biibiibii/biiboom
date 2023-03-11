@@ -2,11 +2,10 @@ import unittest
 from typing import Any
 
 import feapder
-from json2xml import json2xml
-from lxml import etree
 
 from app.model import RequestNode, ResponseType, MatchRule, Node
 from app.settings import settings, logger
+from app.utils import Utils
 
 
 def parse_html(request, response) -> list[Any]:
@@ -38,26 +37,25 @@ def parse_html(request, response) -> list[Any]:
 def parse_json(request, response):
     logger.debug(f"parse json: {response.json}")
     nodes = []
-    xml_data = json2xml.Json2xml(response.json).to_xml()
-    doc = etree.fromstring(xml_data)
     rule = request.node.rule
-    topics = doc.xpath(rule.container)
-    for item in topics[0]:
+    data_list = Utils.dict_get(response.json, rule.container)
+    for item in data_list:
+        item_url = Utils.dict_get(item, rule.url)
         node = Node(
-            title=item.xpath(rule.title)[0],
-            url=f"{request.node.jump_base_url}{item.xpath(rule.url)[0]}"
+            title=Utils.dict_get(item, rule.title),
+            url=f"{request.node.jump_base_url}{item_url}"
             if request.node.jump_base_url
-            else item.xpath(rule.url)[0],
+            else item_url,
         )
         node.parent_node = request.node.unique_id
         if rule.desc:
-            node.desc = item.xpath(rule.desc)[0]
+            node.desc = Utils.dict_get(item, rule.desc)
         if rule.created_at:
-            node.created_at = item.xpath(rule.created_at)[0]
+            node.created_at = Utils.dict_get(item, rule.created_at)
         if rule.extra:
             extra = dict()
             for i in rule.extra:
-                extra[i] = item.xpath(rule.extra[i])
+                extra[i] = Utils.dict_get(item, rule.extra[i])
             node.extra = extra
         logger.debug(f"node: {node}")
         nodes.append(node)
@@ -68,14 +66,14 @@ def parse_json(request, response):
 class ForumSpider(feapder.AirSpider):
     __custom_setting__ = dict(
         ITEM_PIPELINES=["feapder.pipelines.mongo_pipeline.MongoPipeline"],
-        SPIDER_MAX_RETRY_TIMES=2,
+        SPIDER_MAX_RETRY_TIMES=1,
         SPIDER_THREAD_COUNT=settings.max_thread_count,
         MONGO_IP=settings.mongodb_host,
         MONGO_PORT=settings.mongodb_port,
         MONGO_DB=settings.mongodb_database,
         MONGO_USER_NAME=settings.mongodb_username,
         MONGO_USER_PASS=settings.mongodb_password,
-        LOG_LEVEL="INFO",
+        LOG_LEVEL="DEBUG",
         ITEM_FILTER_ENABLE=True,
         REDISDB_IP_PORTS=settings.redisdb_ip_ports,
         REDISDB_USER_PASS=settings.redisdb_user_pass,
@@ -122,17 +120,19 @@ class ForumSpiderTestCase(unittest.TestCase):
         ForumSpider(request_nodes=[html_node]).start()
 
     def test_json(self):
+        url = "https://forum.aptoslabs.com"
+        # url = "https://forum.bnbchain.org"
         json_node = RequestNode(
-            url="https://forum.bnbchain.org/latest.json?&page=0",
-            jump_base_url="https://forum.bnbchain.org/t/",
+            url=f"{url}/latest.json?no_definitions=true&page=0",
+            jump_base_url=f"{url}/t/",
             response_type=ResponseType.json,
             rule=MatchRule(
-                container="//topic_list/topics",
-                title="title/text()",
-                url="slug/text()",
-                created_at="created_at/text()",
+                container="topic_list.topics",
+                title="title",
+                url="slug",
+                created_at="created_at",
                 extra={
-                    "tags": "tags/item/text()",
+                    "tags": "tags",
                 },
             ),
         )

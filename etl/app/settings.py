@@ -5,7 +5,7 @@ from app.log_handler import LogHandler
 
 class Settings(BaseSettings):
     log_name = "etl"
-    log_level = "INFO"
+    log_level = "DEBUG"
     mongodb_database = "news_spider"
     mongodb_host = "127.0.0.1"
     mongodb_port = 27017
@@ -21,6 +21,16 @@ class Settings(BaseSettings):
         "https://ethereum-magicians.org",
         "https://forum.cosmos.network",
         "https://forum.polkadot.network",
+        "https://gov.near.org",
+        "https://forum.aptoslabs.com",
+        "https://forum.astar.network",
+        "https://forum.avax.network",
+        "https://research.arbitrum.io",
+        "https://forum.polygon.technology",
+        "https://gov.optimism.io",
+        "https://forums.sui.io",
+        "https://forums.sui.io",
+        "https://forum.dfinity.org",
     ]
 
 

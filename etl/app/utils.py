@@ -1,5 +1,6 @@
 import unittest
 from hashlib import sha256
+from typing import Any
 
 
 class Utils:
@@ -7,6 +8,17 @@ class Utils:
     def unique_hash(cls, *args) -> str:
         str_list = [str(item) for item in args]
         return sha256("".join(str_list).encode("utf-8")).hexdigest()
+
+    @classmethod
+    def dict_get(cls, obj_dict: dict or list, string: str) -> Any:
+        if not string:
+            return None
+        k = string.split(".")
+        for item in k:
+            if item.isdigit():
+                item = int(item)
+            obj_dict = obj_dict[item]
+        return obj_dict
 
 
 class UtilsTestCase(unittest.TestCase):
@@ -29,6 +41,25 @@ class UtilsTestCase(unittest.TestCase):
         url = "https://forum.bnbchain.org/t/bep-172-draft-improvement-on-bsc-validator-committing-stability"
         url_hash = "916a875a3f6a05a1ac6e01bca93c39777c8bf0bb261ba6085d9bc0e197774a45"
         self.assertEqual(Utils.unique_hash(url), url_hash)
+
+    def test_dict_get(self):
+        a = {"a": 1, "b": {"c": {"d": ["e", "f"]}}}
+        self.assertEqual(Utils.dict_get(a, "b.c"), {"d": ["e", "f"]})
+        self.assertEqual(Utils.dict_get(a, "b.c.d"), ["e", "f"])
+        self.assertEqual(Utils.dict_get(a, "b.c.d.0"), "e")
+
+        b = [
+            {"a": 1, "b": {"c": {"d": ["e", {"a": 1, "b": {"c": {"d": ["e", "f"]}}}]}}}
+        ]
+        self.assertEqual(
+            Utils.dict_get(b, "0.b.c"),
+            {"d": ["e", {"a": 1, "b": {"c": {"d": ["e", "f"]}}}]},
+        )
+        self.assertEqual(Utils.dict_get(b, "0.b.c.d.0"), "e")
+        self.assertEqual(
+            Utils.dict_get(b, "0.b.c.d.1"), {"a": 1, "b": {"c": {"d": ["e", "f"]}}}
+        )
+        self.assertEqual(Utils.dict_get(b, "0.b.c.d.1.b.c"), {"d": ["e", "f"]})
 
 
 if __name__ == "__main__":
