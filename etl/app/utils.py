@@ -15,9 +15,14 @@ class Utils:
             return None
         k = string.split(".")
         for item in k:
-            if item.isdigit():
+            if item.isdigit() and isinstance(obj_dict, list):
                 item = int(item)
-            obj_dict = obj_dict[item]
+            if item in obj_dict:
+                obj_dict = obj_dict[item]
+            elif isinstance(obj_dict, list) and item < len(obj_dict):
+                obj_dict = obj_dict[item]
+            else:
+                return None
         return obj_dict
 
 
@@ -43,23 +48,32 @@ class UtilsTestCase(unittest.TestCase):
         self.assertEqual(Utils.unique_hash(url), url_hash)
 
     def test_dict_get(self):
-        a = {"a": 1, "b": {"c": {"d": ["e", "f"]}}}
-        self.assertEqual(Utils.dict_get(a, "b.c"), {"d": ["e", "f"]})
-        self.assertEqual(Utils.dict_get(a, "b.c.d"), ["e", "f"])
-        self.assertEqual(Utils.dict_get(a, "b.c.d.0"), "e")
-
-        b = [
-            {"a": 1, "b": {"c": {"d": ["e", {"a": 1, "b": {"c": {"d": ["e", "f"]}}}]}}}
+        dict_or_list = [
+            {
+                "a": {"1": 0},
+                "b": {"c": {"d": ["e", {"a": 1, "b": {"c": {"d": ["e", "f"]}}}]}},
+            }
         ]
+
         self.assertEqual(
-            Utils.dict_get(b, "0.b.c"),
+            Utils.dict_get(dict_or_list, "0.b.c"),
             {"d": ["e", {"a": 1, "b": {"c": {"d": ["e", "f"]}}}]},
         )
-        self.assertEqual(Utils.dict_get(b, "0.b.c.d.0"), "e")
         self.assertEqual(
-            Utils.dict_get(b, "0.b.c.d.1"), {"a": 1, "b": {"c": {"d": ["e", "f"]}}}
+            Utils.dict_get(dict_or_list, "0.b.c.d.1.b.c"), {"d": ["e", "f"]}
         )
-        self.assertEqual(Utils.dict_get(b, "0.b.c.d.1.b.c"), {"d": ["e", "f"]})
+
+        # get value by array index
+        self.assertEqual(Utils.dict_get(dict_or_list, "0.b.c.d.0"), "e")
+        self.assertEqual(
+            Utils.dict_get(dict_or_list, "0.b.c.d.1"),
+            {"a": 1, "b": {"c": {"d": ["e", "f"]}}},
+        )
+        self.assertEqual(Utils.dict_get(dict_or_list, "0.a.1"), 0)
+        # key not exist
+        self.assertEqual(Utils.dict_get(dict_or_list, "0.e"), None)
+        # array index too big
+        self.assertEqual(Utils.dict_get(dict_or_list, "1"), None)
 
 
 if __name__ == "__main__":

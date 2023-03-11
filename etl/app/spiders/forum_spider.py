@@ -73,7 +73,7 @@ class ForumSpider(feapder.AirSpider):
         MONGO_DB=settings.mongodb_database,
         MONGO_USER_NAME=settings.mongodb_username,
         MONGO_USER_PASS=settings.mongodb_password,
-        LOG_LEVEL="DEBUG",
+        LOG_LEVEL="INFO",
         ITEM_FILTER_ENABLE=True,
         REDISDB_IP_PORTS=settings.redisdb_ip_ports,
         REDISDB_USER_PASS=settings.redisdb_user_pass,
@@ -122,6 +122,7 @@ class ForumSpiderTestCase(unittest.TestCase):
     def test_json(self):
         url = "https://forum.aptoslabs.com"
         # url = "https://forum.bnbchain.org"
+        url = "https://forum.astar.network"
         json_node = RequestNode(
             url=f"{url}/latest.json?no_definitions=true&page=0",
             jump_base_url=f"{url}/t/",
