@@ -38,24 +38,24 @@ def parse_json(request, response):
     logger.debug(f"parse json: {response.json}")
     nodes = []
     rule = request.node.rule
-    data_list = Utils.dict_get(response.json, rule.container)
+    data_list = Utils.json_path(response.json, rule.container)
     for item in data_list:
-        item_url = Utils.dict_get(item, rule.url)
+        item_url = Utils.json_path(item, rule.url)
         node = Node(
-            title=Utils.dict_get(item, rule.title),
+            title=Utils.json_path(item, rule.title),
             url=f"{request.node.jump_base_url}{item_url}"
             if request.node.jump_base_url
             else item_url,
         )
         node.parent_node = request.node.unique_id
         if rule.desc:
-            node.desc = Utils.dict_get(item, rule.desc)
+            node.desc = Utils.json_path(item, rule.desc)
         if rule.created_at:
-            node.created_at = Utils.dict_get(item, rule.created_at)
+            node.created_at = Utils.json_path(item, rule.created_at)
         if rule.extra:
             extra = dict()
             for i in rule.extra:
-                extra[i] = Utils.dict_get(item, rule.extra[i])
+                extra[i] = Utils.json_path(item, rule.extra[i])
             node.extra = extra
         logger.debug(f"node: {node}")
         nodes.append(node)

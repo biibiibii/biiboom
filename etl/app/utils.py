@@ -10,7 +10,7 @@ class Utils:
         return sha256("".join(str_list).encode("utf-8")).hexdigest()
 
     @classmethod
-    def dict_get(cls, obj_dict: dict or list, string: str) -> Any:
+    def json_path(cls, obj_dict: dict or list, string: str) -> Any:
         if not string:
             return None
         k = string.split(".")
@@ -56,24 +56,24 @@ class UtilsTestCase(unittest.TestCase):
         ]
 
         self.assertEqual(
-            Utils.dict_get(dict_or_list, "0.b.c"),
+            Utils.json_path(dict_or_list, "0.b.c"),
             {"d": ["e", {"a": 1, "b": {"c": {"d": ["e", "f"]}}}]},
         )
         self.assertEqual(
-            Utils.dict_get(dict_or_list, "0.b.c.d.1.b.c"), {"d": ["e", "f"]}
+            Utils.json_path(dict_or_list, "0.b.c.d.1.b.c"), {"d": ["e", "f"]}
         )
 
         # get value by array index
-        self.assertEqual(Utils.dict_get(dict_or_list, "0.b.c.d.0"), "e")
+        self.assertEqual(Utils.json_path(dict_or_list, "0.b.c.d.0"), "e")
         self.assertEqual(
-            Utils.dict_get(dict_or_list, "0.b.c.d.1"),
+            Utils.json_path(dict_or_list, "0.b.c.d.1"),
             {"a": 1, "b": {"c": {"d": ["e", "f"]}}},
         )
-        self.assertEqual(Utils.dict_get(dict_or_list, "0.a.1"), 0)
+        self.assertEqual(Utils.json_path(dict_or_list, "0.a.1"), 0)
         # key not exist
-        self.assertEqual(Utils.dict_get(dict_or_list, "0.e"), None)
+        self.assertEqual(Utils.json_path(dict_or_list, "0.e"), None)
         # array index too big
-        self.assertEqual(Utils.dict_get(dict_or_list, "1"), None)
+        self.assertEqual(Utils.json_path(dict_or_list, "1"), None)
 
 
 if __name__ == "__main__":
