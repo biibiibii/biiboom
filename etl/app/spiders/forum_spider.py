@@ -65,23 +65,14 @@ def parse_json(request, response):
 
 class ForumSpider(feapder.AirSpider):
     __custom_setting__ = dict(
-        # ITEM_PIPELINES=["feapder.pipelines.mongo_pipeline.MongoPipeline"],
         SPIDER_MAX_RETRY_TIMES=1,
         SPIDER_THREAD_COUNT=settings.max_thread_count,
-        # MONGO_IP=settings.mongodb_host,
-        # MONGO_PORT=settings.mongodb_port,
-        # MONGO_DB=settings.mongodb_database,
-        # MONGO_USER_NAME=settings.mongodb_username,
-        # MONGO_USER_PASS=settings.mongodb_password,
         MYSQL_IP=settings.mysql_ip,
         MYSQL_PORT=settings.mysql_port,
         MYSQL_DB=settings.mysql_db,
         MYSQL_USER_NAME=settings.mysql_user_name,
         MYSQL_USER_PASS=settings.mysql_user_pass,
         LOG_LEVEL="INFO",
-        # ITEM_FILTER_ENABLE=True,
-        # REDISDB_IP_PORTS=settings.redisdb_ip_ports,
-        # REDISDB_USER_PASS=settings.redisdb_user_pass,
     )
 
     def __init__(self, request_nodes: list[RequestNode], thread_count=None):
