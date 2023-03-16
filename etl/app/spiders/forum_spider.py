@@ -65,13 +65,19 @@ def parse_json(request, response):
 
 class ForumSpider(feapder.AirSpider):
     __custom_setting__ = dict(
+        ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
         SPIDER_MAX_RETRY_TIMES=1,
         SPIDER_THREAD_COUNT=settings.max_thread_count,
-        MYSQL_IP=settings.mysql_ip,
-        MYSQL_PORT=settings.mysql_port,
-        MYSQL_DB=settings.mysql_db,
-        MYSQL_USER_NAME=settings.mysql_user_name,
-        MYSQL_USER_PASS=settings.mysql_user_pass,
+        # MYSQL_IP=settings.mysql_ip,
+        # MYSQL_PORT=settings.mysql_port,
+        # MYSQL_DB=settings.mysql_db,
+        # MYSQL_USER_NAME=settings.mysql_user_name,
+        # MYSQL_USER_PASS=settings.mysql_user_pass,
+        PGSQL_IP=settings.pgsql_ip,
+        PGSQL_PORT=settings.pgsql_port,
+        PGSQL_DB=settings.pgsql_db,
+        PGSQL_USER_NAME=settings.pgsql_user_name,
+        PGSQL_USER_PASS=settings.pgsql_user_pass,
         LOG_LEVEL="INFO",
     )
 

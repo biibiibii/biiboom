@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     mysql_user_name = "root"
     mysql_user_pass = "root"
 
+    pgsql_ip = "127.0.0.1"
+    pgsql_port = 5432
+    pgsql_db = "hasura"
+    pgsql_user_name = "postgres"
+    pgsql_user_pass = "root"
+
     redisdb_ip_ports = "127.0.0.1:6379"
     redisdb_user_pass = ""
 

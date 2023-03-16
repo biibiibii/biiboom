@@ -1,9 +1,10 @@
 import datetime
 import unittest
 from enum import Enum
+from typing import Any
 
 from feapder import Item
-from pydantic import BaseModel
+from pydantic import BaseModel, PrivateAttr
 
 from app.utils import Utils
 
@@ -37,9 +38,15 @@ class RequestNode(BaseModel):
     response_type: ResponseType
     rule: MatchRule
 
+    _unique_id = PrivateAttr()
+
+    def __init__(self, **data: Any) -> None:
+        super().__init__(**data)
+        self._unique_id = Utils.unique_hash(self.url)
+
     @property
     def unique_id(self) -> str:
-        return Utils.unique_hash(self.url)
+        return self._unique_id
 
     @classmethod
     def from_dict(cls, url_list: list[UrlNode], rule_dict: dict) -> "list[RequestNode]":
