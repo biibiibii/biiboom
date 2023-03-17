@@ -124,7 +124,6 @@ class ForumSpiderTestCase(unittest.TestCase):
             posted_at="created_at",
             extra={
                 "tags": "tags",
-                # "created_at": "created_at",
             },
         )
         rule_item.to_UpdateItem()

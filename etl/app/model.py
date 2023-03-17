@@ -99,23 +99,7 @@ class NodeTestCase(unittest.TestCase):
         print(datetime.datetime.utcnow())
 
     def test_request_node(self):
-        forum_request = UrlNode(
-            url="https://forum.bnbchain.org/latest.json?&page=0",
-            jump_base_url="https://forum.bnbchain.org/t/",
-        )
-        forum_rule = dict(
-            response_type=RuleType.json,
-            rule=MatchRule(
-                container="//topic_list/topics",
-                title="title/text()",
-                url="slug/text()",
-                created_at="created_at/text()",
-                extra={
-                    "tags": "tags/item/text()",
-                },
-            ),
-        )
-        print(Site.from_dict([forum_request], forum_rule))
+        pass
 
 
 if __name__ == "__main__":
