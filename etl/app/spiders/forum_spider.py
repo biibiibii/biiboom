@@ -65,7 +65,8 @@ def parse_json(request, response):
 
 class ForumSpider(feapder.AirSpider):
     __custom_setting__ = dict(
-        ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
+        # ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
+        ITEM_PIPELINES=["app.pipelines.pgsql_pipeline.PgsqlPipeline"],
         SPIDER_MAX_RETRY_TIMES=1,
         SPIDER_THREAD_COUNT=settings.max_thread_count,
         # MYSQL_IP=settings.mysql_ip,
