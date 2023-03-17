@@ -3,7 +3,7 @@ from typing import Any
 
 import feapder
 
-from app.model import RequestNode, ResponseType, MatchRule, Node
+from app.model import Site, RuleType, MatchRule, Node
 from app.settings import settings, logger
 from app.utils import Utils
 
@@ -19,8 +19,8 @@ def parse_html(request, response) -> list[Any]:
         node = Node(
             title=td.xpath(rule.title).extract_first(),
             url=td.xpath(rule.url).extract_first(),
+            site_id=request.node.id,
         )
-        node.parent_node = request.node.unique_id
         if rule.desc:
             node.desc = td.xpath(rule.desc).extract_first()
         if rule.extra:
@@ -46,12 +46,10 @@ def parse_json(request, response):
             url=f"{request.node.jump_base_url}{item_url}"
             if request.node.jump_base_url
             else item_url,
+            site_id=request.node.id,
         )
-        node.parent_node = request.node.unique_id
         if rule.desc:
             node.desc = Utils.json_path(item, rule.desc)
-        if rule.created_at:
-            node.created_at = Utils.json_path(item, rule.created_at)
         if rule.extra:
             extra = dict()
             for i in rule.extra:
@@ -65,8 +63,7 @@ def parse_json(request, response):
 
 class ForumSpider(feapder.AirSpider):
     __custom_setting__ = dict(
-        # ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
-        ITEM_PIPELINES=["app.pipelines.pgsql_pipeline.PgsqlPipeline"],
+        ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
         SPIDER_MAX_RETRY_TIMES=1,
         SPIDER_THREAD_COUNT=settings.max_thread_count,
         # MYSQL_IP=settings.mysql_ip,
@@ -82,7 +79,7 @@ class ForumSpider(feapder.AirSpider):
         LOG_LEVEL="INFO",
     )
 
-    def __init__(self, request_nodes: list[RequestNode], thread_count=None):
+    def __init__(self, request_nodes: list[Site], thread_count=None):
         logger.info(f"start {self.__class__.__name__}...")
         super().__init__(thread_count)
         self.request_nodes = request_nodes
@@ -90,13 +87,13 @@ class ForumSpider(feapder.AirSpider):
     def start_requests(self):
         for item in self.request_nodes:
             logger.info(f"start request url: {item.url}")
-            yield feapder.Request(item.url, node=item)
+            yield feapder.Request(item.url, site=item)
 
     def parse(self, request, response):
-        logger.debug(f"response type: {request.node.response_type}")
-        if request.node.response_type == ResponseType.html:
+        logger.debug(f"response type: {request.site.response_type}")
+        if request.site.response_type == RuleType.html:
             nodes = parse_html(request, response)
-        elif request.node.response_type == ResponseType.json:
+        elif request.site.response_type == RuleType.json:
             nodes = parse_json(request, response)
         else:
             raise NotImplementedError("only support html/json")
@@ -106,9 +103,9 @@ class ForumSpider(feapder.AirSpider):
 
 class ForumSpiderTestCase(unittest.TestCase):
     def test_html(self):
-        html_node = RequestNode(
+        html_node = Site(
             url="https://forum.bnbchain.org/",
-            response_type=ResponseType.html,
+            response_type=RuleType.html,
             rule=MatchRule(
                 container='.//td[@class="main-link"]',
                 title='.//a[contains(@class,"title raw-link raw-topic-link")]/text()',
@@ -126,10 +123,10 @@ class ForumSpiderTestCase(unittest.TestCase):
         url = "https://forum.aptoslabs.com"
         url = "https://forum.bnbchain.org"
         # url = "https://forum.astar.network"
-        json_node = RequestNode(
+        json_node = Site(
             url=f"{url}/latest.json?no_definitions=true&page=0",
             jump_base_url=f"{url}/t/",
-            response_type=ResponseType.json,
+            response_type=RuleType.json,
             rule=MatchRule(
                 container="topic_list.topics",
                 title="title",

@@ -1,10 +1,10 @@
-from app.model import UrlNode, RequestNode
+from app.model import UrlNode, Site
 from app.rules import forum_rule
 from app.settings import settings
 from app.spiders.forum_spider import ForumSpider
 
 
-def make_forum_request(url_list: list) -> list[RequestNode]:
+def make_forum_request(url_list: list) -> list[Site]:
     url_nodes = [
         UrlNode(
             url=f"{item}/latest.json?&page=0",
@@ -12,7 +12,7 @@ def make_forum_request(url_list: list) -> list[RequestNode]:
         )
         for item in url_list
     ]
-    return RequestNode.from_dict(url_nodes, forum_rule)
+    return Site.from_dict(url_nodes, forum_rule)
 
 
 ForumSpider(request_nodes=make_forum_request(settings.forum_urls)).start()

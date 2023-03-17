@@ -1,10 +1,10 @@
-from app.model import ResponseType, MatchRule
+from app.model import RuleType, MatchRule
 
 # https://forum.bnbchain.org/ => https://forum.bnbchain.org/latest.json?&page=0
 # https://ethereum-magicians.org/ => https://ethereum-magicians.org/latest.json?no_definitions=true&page=0
 
 forum_rule = dict(
-    response_type=ResponseType.json,
+    response_type=RuleType.json,
     # rule=MatchRule(
     #     container="//topic_list/topics",
     #     title="title/text()",

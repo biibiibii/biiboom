@@ -4,27 +4,42 @@ from enum import Enum
 from typing import Any
 
 from feapder import Item
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel
 
 from app.utils import Utils
 
 
-class ResponseType(Enum):
+class RuleType(Enum):
     json = "json"
     html = "html"
 
 
-class MatchRule(BaseModel):
+class MatchRule(Item):
+    id: str
     container: str
     title: str
     url: str
     desc: str = None
-    created_at: str = None
     extra: dict[str, str] = None
+    note: str = None
+    rule_type: str = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Utils.unique_hash(
+            [
+                self.container,
+                self.title,
+                self.url,
+                self.desc,
+                self.extra,
+                self.rule_type,
+            ]
+        )
 
     @property
-    def unique_id(self) -> str:
-        return Utils.unique_hash(self.unique_id)
+    def fingerprint(self):
+        return self.id
 
 
 class UrlNode(BaseModel):
@@ -32,46 +47,40 @@ class UrlNode(BaseModel):
     jump_base_url: str = None
 
 
-class RequestNode(BaseModel):
+class Site(Item):
+    id: str
     url: str
     jump_base_url: str = None
-    response_type: ResponseType
-    rule: MatchRule
-
-    _unique_id = PrivateAttr()
+    rule_id: str
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
-        self._unique_id = Utils.unique_hash(self.url)
+        self.id = Utils.unique_hash(self.url)
 
     @property
-    def unique_id(self) -> str:
-        return self._unique_id
+    def fingerprint(self):
+        return self.id
 
     @classmethod
-    def from_dict(cls, url_list: list[UrlNode], rule_dict: dict) -> "list[RequestNode]":
+    def from_dict(cls, url_list: list[UrlNode], rule_dict: dict) -> "list[Site]":
         return [__class__(**{**item.dict(), **rule_dict}) for item in url_list]
 
 
 class Node(Item):
+    id: str
+    site_id: str
     url: str
     title: str
     desc: str = None
-    parent_node: str
     extra: dict[str, list] = None
-    unique_id: str = None
-    created_at: datetime = None
-    _last_updated_time: datetime = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        if self.url:
-            self.unique_id = Utils.unique_hash(self.url)
-        self._last_updated_time = datetime.datetime.utcnow()
+        self.id = Utils.unique_hash([self.site_id, self.url])
 
     @property
     def fingerprint(self):
-        return self.unique_id
+        return self.id
 
 
 class NodeTestCase(unittest.TestCase):
@@ -85,7 +94,7 @@ class NodeTestCase(unittest.TestCase):
             jump_base_url="https://forum.bnbchain.org/t/",
         )
         forum_rule = dict(
-            response_type=ResponseType.json,
+            response_type=RuleType.json,
             rule=MatchRule(
                 container="//topic_list/topics",
                 title="title/text()",
@@ -96,7 +105,7 @@ class NodeTestCase(unittest.TestCase):
                 },
             ),
         )
-        print(RequestNode.from_dict([forum_request], forum_rule))
+        print(Site.from_dict([forum_request], forum_rule))
 
 
 if __name__ == "__main__":
