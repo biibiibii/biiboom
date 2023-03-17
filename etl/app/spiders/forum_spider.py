@@ -81,7 +81,7 @@ class ForumSpider(feapder.AirSpider):
         PGSQL_DB=settings.pgsql_db,
         PGSQL_USER_NAME=settings.pgsql_user_name,
         PGSQL_USER_PASS=settings.pgsql_user_pass,
-        LOG_LEVEL="DEBUG",
+        LOG_LEVEL="INFO",
     )
 
     def __init__(self, request_sites: list[RequestSite], thread_count=None):
