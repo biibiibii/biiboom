@@ -3,15 +3,16 @@ from typing import Any
 
 import feapder
 
-from app.model import Site, RuleType, MatchRule, Node
+from app.model import Site, RuleType, MatchRule, Node, RequestSite
 from app.settings import settings, logger
 from app.utils import Utils
 
 
 def parse_html(request, response) -> list[Any]:
-    logger.debug(f"parse_html")
-    logger.debug(f"request param: {request.node}")
-    rule = request.node.rule
+    rule = request.request_site.rule
+    site = request.request_site.site
+    logger.debug(f"parse_html: {site}")
+
     tds = response.xpath(rule.container)
     logger.debug(len(tds))
     nodes = []
@@ -19,7 +20,7 @@ def parse_html(request, response) -> list[Any]:
         node = Node(
             title=td.xpath(rule.title).extract_first(),
             url=td.xpath(rule.url).extract_first(),
-            site_id=request.node.id,
+            site_id=site.id,
         )
         if rule.desc:
             node.desc = td.xpath(rule.desc).extract_first()
@@ -35,18 +36,18 @@ def parse_html(request, response) -> list[Any]:
 
 
 def parse_json(request, response):
-    logger.debug(f"parse json: {response.json}")
+    rule = request.request_site.rule
+    site = request.request_site.site
+    logger.debug(f"parse json: {site}")
     nodes = []
-    rule = request.node.rule
+
     data_list = Utils.json_path(response.json, rule.container)
     for item in data_list:
         item_url = Utils.json_path(item, rule.url)
         node = Node(
             title=Utils.json_path(item, rule.title),
-            url=f"{request.node.jump_base_url}{item_url}"
-            if request.node.jump_base_url
-            else item_url,
-            site_id=request.node.id,
+            url=f"{site.jump_base_url}{item_url}" if site.jump_base_url else item_url,
+            site_id=site.id,
         )
         if rule.desc:
             node.desc = Utils.json_path(item, rule.desc)
@@ -76,68 +77,61 @@ class ForumSpider(feapder.AirSpider):
         PGSQL_DB=settings.pgsql_db,
         PGSQL_USER_NAME=settings.pgsql_user_name,
         PGSQL_USER_PASS=settings.pgsql_user_pass,
-        LOG_LEVEL="INFO",
+        LOG_LEVEL="DEBUG",
     )
 
-    def __init__(self, request_nodes: list[Site], thread_count=None):
+    def __init__(self, request_sites: list[RequestSite], thread_count=None):
         logger.info(f"start {self.__class__.__name__}...")
         super().__init__(thread_count)
-        self.request_nodes = request_nodes
+        self.request_nodes = request_sites
 
     def start_requests(self):
         for item in self.request_nodes:
-            logger.info(f"start request url: {item.url}")
-            yield feapder.Request(item.url, site=item)
+            logger.info(f"start request url: {item.site.url}")
+            yield feapder.Request(item.site.url, request_site=item)
 
     def parse(self, request, response):
-        logger.debug(f"response type: {request.site.response_type}")
-        if request.site.response_type == RuleType.html:
+        rule = request.request_site.rule
+        site = request.request_site.site
+
+        logger.debug(f"response type: {rule}")
+        if rule.rule_type == RuleType.html.value:
             nodes = parse_html(request, response)
-        elif request.site.response_type == RuleType.json:
+        elif rule.rule_type == RuleType.json.value:
             nodes = parse_json(request, response)
         else:
             raise NotImplementedError("only support html/json")
         for item in nodes:
             yield item
+        yield site
+        yield rule
 
 
 class ForumSpiderTestCase(unittest.TestCase):
-    def test_html(self):
-        html_node = Site(
-            url="https://forum.bnbchain.org/",
-            response_type=RuleType.html,
-            rule=MatchRule(
-                container='.//td[@class="main-link"]',
-                title='.//a[contains(@class,"title raw-link raw-topic-link")]/text()',
-                url='.//a[contains(@class,"title raw-link raw-topic-link")]/@href',
-                extra={
-                    "category": './/span[@class="category-name"]/text()',
-                    "tags": './/a[contains(@class,"discourse-tag")]/text()',
-                },
-            ),
-        )
-
-        ForumSpider(request_nodes=[html_node]).start()
-
     def test_json(self):
         url = "https://forum.aptoslabs.com"
         url = "https://forum.bnbchain.org"
         # url = "https://forum.astar.network"
-        json_node = Site(
+        rule_item = MatchRule(
+            container="topic_list.topics",
+            title="title",
+            url="slug",
+            rule_type=RuleType.json.value,
+            extra={
+                "tags": "tags",
+                "created_at": "created_at",
+            },
+        )
+        rule_item.to_UpdateItem()
+        site = Site(
             url=f"{url}/latest.json?no_definitions=true&page=0",
             jump_base_url=f"{url}/t/",
-            response_type=RuleType.json,
-            rule=MatchRule(
-                container="topic_list.topics",
-                title="title",
-                url="slug",
-                created_at="created_at",
-                extra={
-                    "tags": "tags",
-                },
-            ),
+            rule_id=rule_item.id,
         )
-        ForumSpider(request_nodes=[json_node]).start()
+        site.to_UpdateItem()
+        request_site = RequestSite(site=site, rule=rule_item)
+
+        ForumSpider(request_sites=[request_site]).start()
 
 
 if __name__ == "__main__":

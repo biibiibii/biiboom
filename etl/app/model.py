@@ -66,6 +66,14 @@ class Site(Item):
         return [__class__(**{**item.dict(), **rule_dict}) for item in url_list]
 
 
+class RequestSite(BaseModel):
+    site: Site
+    rule: MatchRule
+
+    class Config:
+        arbitrary_types_allowed = True
+
+
 class Node(Item):
     id: str
     site_id: str

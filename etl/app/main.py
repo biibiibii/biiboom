@@ -15,4 +15,4 @@ def make_forum_request(url_list: list) -> list[Site]:
     return Site.from_dict(url_nodes, forum_rule)
 
 
-ForumSpider(request_nodes=make_forum_request(settings.forum_urls)).start()
+ForumSpider(request_sites=make_forum_request(settings.forum_urls)).start()
