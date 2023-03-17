@@ -24,6 +24,8 @@ def parse_html(request, response) -> list[Any]:
         )
         if rule.desc:
             node.desc = td.xpath(rule.desc).extract_first()
+        if rule.posted_at:
+            node.posted_at = td.xpath(rule.posted_at).extract_first()
         if rule.extra:
             extra = dict()
             for item in rule.extra:
@@ -51,6 +53,8 @@ def parse_json(request, response):
         )
         if rule.desc:
             node.desc = Utils.json_path(item, rule.desc)
+        if rule.posted_at:
+            node.posted_at = Utils.json_path(item, rule.posted_at)
         if rule.extra:
             extra = dict()
             for i in rule.extra:
@@ -117,9 +121,10 @@ class ForumSpiderTestCase(unittest.TestCase):
             title="title",
             url="slug",
             rule_type=RuleType.json.value,
+            posted_at="created_at",
             extra={
                 "tags": "tags",
-                "created_at": "created_at",
+                # "created_at": "created_at",
             },
         )
         rule_item.to_UpdateItem()

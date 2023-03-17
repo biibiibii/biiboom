@@ -19,6 +19,7 @@ class MatchRule(Item):
     container: str
     title: str
     url: str
+    posted_at: str = None
     desc: str = None
     extra: dict[str, str] = None
     note: str = None
@@ -80,6 +81,7 @@ class Node(Item):
     url: str
     title: str
     desc: str = None
+    posted_at: datetime = None
     extra: dict[str, list] = None
 
     def __init__(self, **kwargs):
