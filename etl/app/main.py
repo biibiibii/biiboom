@@ -4,7 +4,7 @@ from app.settings import settings
 from app.spiders.forum_spider import ForumSpider
 
 
-def make_forum_request(url_list: list) -> list[RequestSite]:
+def make_forum_requests(url_list: list) -> list[RequestSite]:
     rule = forum_rule
     sites = [
         Site(
@@ -18,4 +18,4 @@ def make_forum_request(url_list: list) -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule) for site in sites]
 
 
-ForumSpider(request_sites=make_forum_request(settings.forum_urls)).start()
+ForumSpider(request_sites=make_forum_requests(settings.forum_urls)).start()
