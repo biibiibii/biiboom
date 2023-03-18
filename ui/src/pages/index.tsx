@@ -4,6 +4,8 @@ import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { Button } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
+import { GithubOutlined } from '@ant-design/icons';
+import { DefaultFooter } from '@ant-design/pro-components';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -41,6 +43,30 @@ export default function Home() {
         </div>
         <Button type="primary">Button</Button>
       </main>
+
+      <DefaultFooter
+        copyright="@2019 蚂蚁金服体验技术部出品"
+        links={[
+          {
+            key: 'Ant Design Pro',
+            title: 'Ant Design Pro',
+            href: 'https://pro.ant.design',
+            blankTarget: true,
+          },
+          {
+            key: 'github',
+            title: <GithubOutlined />,
+            href: 'https://github.com/ant-design/ant-design-pro',
+            blankTarget: true,
+          },
+          {
+            key: 'Ant Design',
+            title: 'Ant Design',
+            href: 'https://ant.design',
+            blankTarget: true,
+          },
+        ]}
+      />;
     </>
   )
 }
