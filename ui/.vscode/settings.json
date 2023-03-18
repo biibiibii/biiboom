@@ -1,4 +1,0 @@
-{
-  "typescript.tsdk": "node_modules/.pnpm/registry.npmmirror.com+typescript@5.0.2/node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
-}
