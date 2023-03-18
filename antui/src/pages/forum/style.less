@@ -1,7 +1,11 @@
 @import '~antd/es/style/themes/default.less';
-
+.nodesRow {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
 .nodesList {
-  height: 300px;
+  height: 320px;
   margin: 0px 0 0;
   padding: 0;
   overflow: auto;
@@ -11,7 +15,7 @@
     flex: 1;
     align-items: flex-start;
     justify-content: left;
-    margin-top: 16px;
+    padding-bottom: 6px;
     zoom: 1;
     &::before,
     &::after {
@@ -34,7 +38,7 @@
       width: 20px;
       height: 20px;
       margin-top: 1.5px;
-      margin-right: 16px;
+      margin-right: 3px;
       font-weight: 600;
       font-size: 12px;
       line-height: 20px;
@@ -49,7 +53,7 @@
     .nodesItemTitle {
       display: -webkit-box;
       flex: 1;
-      margin-right: 8px;
+      margin-right: 6px;
       overflow: hidden;
       text-align: left;
       text-overflow: ellipsis;
@@ -58,6 +62,22 @@
       &:hover {
         color: @blue-6;
       }
+      .datetime {
+        margin-left: 6px;
+        font-size: 12px;
+      }
     }
   }
+  &:hover::-webkit-scrollbar {
+    display: block;
+  }
+}
+.nodesList::-webkit-scrollbar {
+  width: 2px;
+  height: 3px;
+}
+
+.nodesList::-webkit-scrollbar-thumb {
+  height: 3px;
+  background-color: #c6c6c6;
 }
