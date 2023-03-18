@@ -5,7 +5,7 @@ from app.log_handler import LogHandler
 
 class Settings(BaseSettings):
     log_name = "etl"
-    log_level = "INFO"
+    log_level = "DEBUG"
 
     mysql_ip = "127.0.0.1"
     mysql_port = 3305

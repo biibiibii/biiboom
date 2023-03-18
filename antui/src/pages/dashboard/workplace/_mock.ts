@@ -402,6 +402,7 @@ const getChartData = (_: Request, res: Response) => {
     },
   });
 };
+console.log('getNotice:', getNotice);
 
 export default {
   'GET  /api/project/notice': getNotice,

@@ -1,0 +1,105 @@
+@import '~antd/es/style/themes/default.less';
+
+.cardContainer {
+  height: max-height;
+  // padding: 16px;
+  overflow: auto;
+}
+
+.card-container::-webkit-scrollbar {
+  width: 2px;
+}
+
+.card-container:hover::-webkit-scrollbar {
+  opacity: 1;
+}
+
+.card-container::-webkit-scrollbar-track {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px grey;
+}
+
+.card-container::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 10px;
+}
+
+.cardContent {
+  height: max-height;
+}
+.cardContent::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.cardContent::-webkit-scrollbar-track {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px grey;
+}
+
+/* Handle */
+.cardContent::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 10px;
+}
+
+.rankingList {
+  height: 300px;
+  margin: 0px 0 0;
+  padding: 0;
+  list-style: none;
+  li {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    justify-content: left;
+    margin-top: 16px;
+    zoom: 1;
+    &::before,
+    &::after {
+      display: table;
+      content: ' ';
+    }
+    &::after {
+      clear: both;
+      height: 0;
+      font-size: 0;
+      visibility: hidden;
+    }
+    span {
+      color: @text-color;
+      font-size: 16px;
+      line-height: 22px;
+    }
+    .rankingItemNumber {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin-top: 1.5px;
+      margin-right: 16px;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 20px;
+      text-align: center;
+      // background-color: @tag-default-bg;
+      border-radius: 20px;
+      &.active {
+        color: @red-5;
+        // background-color: #52c41a;
+      }
+    }
+    .rankingItemTitle {
+      display: -webkit-box;
+      flex: 1;
+      margin-right: 8px;
+      overflow: hidden;
+      text-align: left;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      &:hover {
+        color: @blue-6;
+      }
+    }
+  }
+}

@@ -5,7 +5,8 @@ from app.model import RuleType, MatchRule
 forum_rule = MatchRule(
     container="topic_list.topics",
     title="title",
-    url="slug",
+    # url="slug",
+    url="id",
     rule_type=RuleType.json.value,
     posted_at="created_at",
     extra={
