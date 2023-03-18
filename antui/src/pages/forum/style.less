@@ -1,52 +1,10 @@
 @import '~antd/es/style/themes/default.less';
 
-.cardContainer {
-  height: max-height;
-  // padding: 16px;
-  overflow: auto;
-}
-
-.card-container::-webkit-scrollbar {
-  width: 2px;
-}
-
-.card-container:hover::-webkit-scrollbar {
-  opacity: 1;
-}
-
-.card-container::-webkit-scrollbar-track {
-  border-radius: 10px;
-  box-shadow: inset 0 0 5px grey;
-}
-
-.card-container::-webkit-scrollbar-thumb {
-  background: grey;
-  border-radius: 10px;
-}
-
-.cardContent {
-  height: max-height;
-}
-.cardContent::-webkit-scrollbar {
-  width: 2px;
-}
-
-/* Track */
-.cardContent::-webkit-scrollbar-track {
-  border-radius: 10px;
-  box-shadow: inset 0 0 5px grey;
-}
-
-/* Handle */
-.cardContent::-webkit-scrollbar-thumb {
-  background: grey;
-  border-radius: 10px;
-}
-
-.rankingList {
+.nodesList {
   height: 300px;
   margin: 0px 0 0;
   padding: 0;
+  overflow: auto;
   list-style: none;
   li {
     display: flex;
@@ -71,7 +29,7 @@
       font-size: 16px;
       line-height: 22px;
     }
-    .rankingItemNumber {
+    .nodesItemNumber {
       display: inline-block;
       width: 20px;
       height: 20px;
@@ -88,7 +46,7 @@
         // background-color: #52c41a;
       }
     }
-    .rankingItemTitle {
+    .nodesItemTitle {
       display: -webkit-box;
       flex: 1;
       margin-right: 8px;
