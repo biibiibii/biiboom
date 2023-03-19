@@ -1,4 +1,5 @@
 export default {
+  'menu.forum': 'Forum',
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',
   'menu.home': 'Home',

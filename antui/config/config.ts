@@ -35,45 +35,14 @@ export default defineConfig({
   // umi routes: https://umijs.org/docs/routing
   routes: [
     {
-      path: '/user',
-      layout: false,
-      routes: [
-        {
-          path: '/user/login',
-          layout: false,
-          name: 'login',
-          component: './user/Login',
-        },
-        {
-          path: '/user',
-          redirect: '/user/login',
-        },
-        {
-          name: 'register-result',
-          icon: 'smile',
-          path: '/user/register-result',
-          component: './user/register-result',
-        },
-        {
-          name: 'register',
-          icon: 'smile',
-          path: '/user/register',
-          component: './user/register',
-        },
-        {
-          component: '404',
-        },
-      ],
-    },
-    {
       path: '/forum/index',
-      name: 'Forum',
+      name: 'forum',
       icon: 'comment',
       component: './forum',
     },
     {
       path: '/',
-      redirect: '/dashboard/analysis',
+      redirect: '/forum/index',
     },
     {
       component: '404',
