@@ -1,8 +1,6 @@
 import { request } from 'umi';
 import type { SiteData } from './data';
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+
 export async function querySiteNodes(): Promise<{ data: { site: SiteData[] } }> {
   const payload = {
     query:
