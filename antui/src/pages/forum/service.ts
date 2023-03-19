@@ -1,12 +1,17 @@
 import { request } from 'umi';
-import type { TagType, SiteData } from './data';
-
-export async function queryTags(): Promise<{ data: { list: TagType[] } }> {
-  return request('/api/tags');
-}
+import type { SiteData } from './data';
 
 export async function querySiteNodes(): Promise<{ data: { site: SiteData[] } }> {
-  console.log('querySiteNodes');
+  const payload = {
+    query:
+      'query GetMatchRule($limit:Int) {\n  site(limit: $limit) {\n    name\n    url\n    rule_id\n    jump_base_url\n    id\n    nodes(limit: 20, order_by: {posted_at: desc}) {\n      url\n      title\n      site_id\n      posted_at\n      id\n      extra\n      desc\n      _updated_at\n    }\n  }\n}\n',
+    variables: null,
+    operationName: 'GetMatchRule',
+  };
 
-  return request('/api/rest/get_match_rule');
+  const resp = request('/v1/graphql', {
+    method: 'post',
+    data: payload,
+  });
+  return resp;
 }

@@ -1,9 +1,3 @@
-export type TagType = {
-  name: string;
-  value: number;
-  type: string;
-};
-
 export type NodeType = {
   url: string;
   title: string;
