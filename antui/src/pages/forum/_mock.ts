@@ -1270,7 +1270,6 @@ const getNodes = (_: Request, res: Response) => {
     },
   });
 };
-console.log('getNodes:', getNodes);
 
 export default {
   'GET  /api/rest/get_match_rule': getNodes,
