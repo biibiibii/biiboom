@@ -15,18 +15,6 @@ const ForumList: FC = () => {
   return (
     <GridContent>
       <>
-        {loading ? (
-          <Row gutter={12} className={styles.nodesRow}>
-            {[1, 2, 3, 4].map((item) => (
-              <Col key={item} xl={6} lg={12} sm={12} xs={24} style={{ marginBottom: 12 }}>
-                <Card loading={loading}></Card>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          ''
-        )}
-
         <Row gutter={12} className={styles.nodesRow}>
           {nodesData.map((item) => (
             <Col xl={6} lg={12} sm={12} xs={24} style={{ marginBottom: 12 }}>
@@ -36,7 +24,6 @@ const ForumList: FC = () => {
                 bordered={false}
                 size={'small'}
                 hoverable={true}
-                loading={loading}
               >
                 <ul className={styles.nodesList}>
                   {item.nodes.map((node, i) => (
