@@ -1,4 +1,4 @@
-# Biiboom
+# BiiBoom
 
 ## Environment Prepare
 

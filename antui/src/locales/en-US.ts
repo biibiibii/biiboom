@@ -11,7 +11,7 @@ export default {
   'layout.user.link.help': 'Help',
   'layout.user.link.privacy': 'Privacy',
   'layout.user.link.terms': 'Terms',
-  'app.copyright.produced': 'Produced by Biiboom',
+  'app.copyright.produced': 'Produced by BiiBoom',
   ...globalHeader,
   ...menu,
   ...settingDrawer,

@@ -4,7 +4,7 @@ const Settings: LayoutSettings & {
   pwa?: boolean;
   logo?: string;
 } = {
-  title: 'Biiboom',
+  title: 'BiiBoom',
   // navTheme: 'realDark',
   navTheme: 'light',
   primaryColor: '#52C41A',

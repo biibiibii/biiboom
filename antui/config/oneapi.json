@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Biiboom Open API",
+    "title": "BiiBoom Open API",
     "version": "1.0.0"
   },
   "servers": [
