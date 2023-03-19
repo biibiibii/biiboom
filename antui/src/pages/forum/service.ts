@@ -10,7 +10,6 @@ export async function querySiteNodes(): Promise<{ data: { site: SiteData[] } }> 
     variables: null,
     operationName: 'GetMatchRule',
   };
-  await sleep(3000);
   const resp = request('/v1/graphql', {
     method: 'post',
     data: payload,
