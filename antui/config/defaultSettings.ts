@@ -5,6 +5,7 @@ const Settings: LayoutSettings & {
   logo?: string;
 } = {
   title: 'Biiboom',
+  // navTheme: 'realDark',
   navTheme: 'light',
   primaryColor: '#52C41A',
   layout: 'top',
