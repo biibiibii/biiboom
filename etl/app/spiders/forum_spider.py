@@ -92,7 +92,8 @@ class ForumSpider(feapder.AirSpider):
             raise NotImplementedError("only support html/json")
         for item in nodes:
             yield item
-        # yield site
+        # Update next update time
+        yield site
         # yield rule
 
 
@@ -112,14 +113,15 @@ class ForumSpiderTestCase(unittest.TestCase):
                 "tags": "tags",
             },
         )
-        rule_item.to_UpdateItem()
+
         site = Site(
             url=f"{url}/latest.json?no_definitions=true&page=0",
             jump_base_url=f"{url}/t/",
             rule_id=rule_item.id,
         )
-        site.to_UpdateItem()
+
         request_site = RequestSite(site=site, rule=rule_item)
+        logger.debug(f"site:{site}")
 
         ForumSpider(request_sites=[request_site]).start()
 

@@ -1,4 +1,5 @@
 import datetime
+import time
 import unittest
 from enum import Enum
 from typing import Any
@@ -6,6 +7,7 @@ from typing import Any
 from feapder import Item, UpdateItem
 from pydantic import BaseModel
 
+from app.settings import settings
 from app.utils import Utils
 
 
@@ -49,7 +51,7 @@ class UrlNode(BaseModel):
 
 
 class Site(UpdateItem):
-    __update_key__ = ["url", "jump_base_url", "rule_id", "name", "sub_name", "tags"]
+    __update_key__ = ["next_update_time"]
     id: str
     url: str
     jump_base_url: str = None
@@ -58,10 +60,15 @@ class Site(UpdateItem):
     name: str
     sub_name: str
     tags: list[str]
+    update_rate: int
+    next_update_time: int
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
         self.id = Utils.unique_hash(self.url)
+        if "update_rate" not in self.to_dict:
+            self.update_rate = settings.site_update_rate
+        self.next_update_time = int(time.time()) + self.update_rate
 
     @property
     def fingerprint(self):
@@ -104,6 +111,7 @@ class NodeTestCase(unittest.TestCase):
         print(datetime.datetime.utcnow())
 
     def test_request_node(self):
+        print(int(time.time()))
         pass
 
 
