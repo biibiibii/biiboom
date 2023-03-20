@@ -53,6 +53,10 @@ class Site(Item):
     url: str
     jump_base_url: str = None
     rule_id: str
+    language: str
+    name: str
+    sub_name: str
+    tags: list[str]
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
