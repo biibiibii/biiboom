@@ -21,7 +21,7 @@ class Settings(BaseSettings):
 
     feapder_settings = dict(
         ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
-        SPIDER_MAX_RETRY_TIMES=1,
+        SPIDER_MAX_RETRY_TIMES=0,
         SPIDER_THREAD_COUNT=spider_thread_count,
         PGSQL_IP=pgsql_ip,
         PGSQL_PORT=pgsql_port,
@@ -46,6 +46,8 @@ class Settings(BaseSettings):
         "https://forums.sui.io",
         "https://forum.dfinity.org",
     ]
+
+    news_cn_urls = ["https://www.chainfeeds.xyz/"]
 
 
 settings = Settings()
