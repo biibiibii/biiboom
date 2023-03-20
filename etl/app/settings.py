@@ -7,12 +7,6 @@ class Settings(BaseSettings):
     log_name = "etl"
     log_level = "INFO"
 
-    mysql_ip = "127.0.0.1"
-    mysql_port = 3305
-    mysql_db = "news_spider"
-    mysql_user_name = "root"
-    mysql_user_pass = "root"
-
     pgsql_ip = "127.0.0.1"
     pgsql_port = 5432
     pgsql_db = "hasura"
@@ -21,8 +15,19 @@ class Settings(BaseSettings):
 
     redisdb_ip_ports = "127.0.0.1:6379"
     redisdb_user_pass = ""
-
     max_thread_count = 3
+
+    feapder_settings = dict(
+        ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
+        SPIDER_MAX_RETRY_TIMES=1,
+        SPIDER_THREAD_COUNT=max_thread_count,
+        PGSQL_IP=pgsql_ip,
+        PGSQL_PORT=pgsql_port,
+        PGSQL_DB=pgsql_db,
+        PGSQL_USER_NAME=pgsql_user_name,
+        PGSQL_USER_PASS=pgsql_user_pass,
+        LOG_LEVEL="INFO",
+    )
 
     forum_urls = [
         "https://forum.bnbchain.org",

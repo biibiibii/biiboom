@@ -3,7 +3,7 @@ import unittest
 from enum import Enum
 from typing import Any
 
-from feapder import Item
+from feapder import Item, UpdateItem
 from pydantic import BaseModel
 
 from app.utils import Utils
@@ -48,7 +48,8 @@ class UrlNode(BaseModel):
     jump_base_url: str = None
 
 
-class Site(Item):
+class Site(UpdateItem):
+    __update_key__ = ["url", "jump_base_url", "rule_id", "name", "sub_name", "tags"]
     id: str
     url: str
     jump_base_url: str = None

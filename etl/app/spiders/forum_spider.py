@@ -67,22 +67,7 @@ def parse_json(request, response):
 
 
 class ForumSpider(feapder.AirSpider):
-    __custom_setting__ = dict(
-        ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
-        SPIDER_MAX_RETRY_TIMES=1,
-        SPIDER_THREAD_COUNT=settings.max_thread_count,
-        # MYSQL_IP=settings.mysql_ip,
-        # MYSQL_PORT=settings.mysql_port,
-        # MYSQL_DB=settings.mysql_db,
-        # MYSQL_USER_NAME=settings.mysql_user_name,
-        # MYSQL_USER_PASS=settings.mysql_user_pass,
-        PGSQL_IP=settings.pgsql_ip,
-        PGSQL_PORT=settings.pgsql_port,
-        PGSQL_DB=settings.pgsql_db,
-        PGSQL_USER_NAME=settings.pgsql_user_name,
-        PGSQL_USER_PASS=settings.pgsql_user_pass,
-        LOG_LEVEL="INFO",
-    )
+    __custom_setting__ = settings.feapder_settings
 
     def __init__(self, request_sites: list[RequestSite], thread_count=None):
         logger.info(f"start {self.__class__.__name__}...")
@@ -107,8 +92,8 @@ class ForumSpider(feapder.AirSpider):
             raise NotImplementedError("only support html/json")
         for item in nodes:
             yield item
-        yield site
-        yield rule
+        # yield site
+        # yield rule
 
 
 class ForumSpiderTestCase(unittest.TestCase):

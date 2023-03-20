@@ -1,3 +1,4 @@
+from app.db.db_client import db_client
 from app.model import Site, RequestSite
 from app.rules import forum_rule
 from app.settings import settings
@@ -17,6 +18,8 @@ def make_forum_requests(url_list: list) -> list[RequestSite]:
         )
         for item in url_list
     ]
+    db_client.put_items(sites)
+    db_client.save()
 
     return [RequestSite(site=site, rule=rule) for site in sites]
 

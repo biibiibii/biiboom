@@ -30,7 +30,6 @@ class Utils:
     def get_name_from_url(cls, url: str) -> str:
         parsed_url = urlparse(url)
         host_name = parsed_url.netloc
-        print(host_name.split("."))
         name_arr = host_name.split(".")
         if len(name_arr) <= 1:
             return name_arr[0]
