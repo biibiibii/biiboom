@@ -1,6 +1,7 @@
 import unittest
 from hashlib import sha256
 from typing import Any
+from urllib.parse import urlparse
 
 
 class Utils:
@@ -24,6 +25,16 @@ class Utils:
             else:
                 return None
         return obj_dict
+
+    @classmethod
+    def get_name_from_url(cls, url: str) -> str:
+        parsed_url = urlparse(url)
+        host_name = parsed_url.netloc
+        print(host_name.split("."))
+        name_arr = host_name.split(".")
+        if len(name_arr) <= 1:
+            return name_arr[0]
+        return name_arr[len(name_arr) - 2].capitalize()
 
 
 class UtilsTestCase(unittest.TestCase):
@@ -74,6 +85,25 @@ class UtilsTestCase(unittest.TestCase):
         self.assertEqual(Utils.json_path(dict_or_list, "0.e"), None)
         # array index too big
         self.assertEqual(Utils.json_path(dict_or_list, "1"), None)
+
+    def test_get_name_from_url(self):
+        forum_urls = [
+            "https://bnbchain.org",
+            "https://ethereum-magicians.org",
+            "https://forum.cosmos.network",
+            "https://forum.polkadot.network",
+            "https://gov.near.org",
+            "https://forum.aptoslabs.com",
+            "https://forum.astar.network",
+            "https://forum.avax.network",
+            "https://research.arbitrum.io",
+            "https://forum.polygon.technology",
+            "https://gov.optimism.io",
+            "https://forums.sui.io",
+            "https://forum.dfinity.org",
+        ]
+        for item in forum_urls:
+            print(Utils.get_name_from_url(item))
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ from app.log_handler import LogHandler
 
 class Settings(BaseSettings):
     log_name = "etl"
-    log_level = "DEBUG"
+    log_level = "INFO"
 
     mysql_ip = "127.0.0.1"
     mysql_port = 3305
@@ -36,7 +36,6 @@ class Settings(BaseSettings):
         "https://research.arbitrum.io",
         "https://forum.polygon.technology",
         "https://gov.optimism.io",
-        "https://forums.sui.io",
         "https://forums.sui.io",
         "https://forum.dfinity.org",
     ]
