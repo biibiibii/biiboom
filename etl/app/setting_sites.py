@@ -5,11 +5,15 @@
 """
 import unittest
 
+from pydantic import BaseSettings
+
 from app.db.db_client import db_client
 from app.model import RequestSite, Site
 from app.setting_rules import setting_rules
 from app.settings import settings, logger
 from app.utils import Utils
+
+__all__ = ["setting_sites"]
 
 
 def make_forum_requests() -> list[RequestSite]:
@@ -60,7 +64,7 @@ _request_list = [
 ]
 
 
-class SettingSites:
+class SettingSites(BaseSettings):
     @property
     def request_sites(self) -> list[RequestSite]:
         __site_list = []
@@ -71,7 +75,9 @@ class SettingSites:
 
     def update_sites(self):
         sites = self.request_sites
-        db_client.put_items(sites)
+        for site in sites:
+            db_client.put_item(site.site)
+            db_client.put_item(site.rule)
         db_client.save()
 
 

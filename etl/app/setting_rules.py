@@ -47,12 +47,10 @@ setting_rules = SettingRules()
 
 
 class RequestsTestCase(unittest.TestCase):
-    @staticmethod
-    def test_rule_settings():
+    def test_rule_settings(self):
         logger.debug(f"rule settings: {setting_rules}")
 
-    @staticmethod
-    def test_update_rules():
+    def test_update_rules(self):
         setting_rules.update_rules()
         pass
 

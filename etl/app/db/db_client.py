@@ -13,6 +13,7 @@ from app.settings import settings
 
 class DbClient:
     def __init__(self) -> None:
+        self._redis_key = "db_client"
         # Init feapder setting
         for key, value in settings.feapder_settings.items():
             setattr(setting, key, value)
@@ -25,7 +26,7 @@ class DbClient:
 
     def put_item(self, item: Item):
         if not self._item_buffer:
-            self._item_buffer = ItemBuffer(redis_key="db_client")
+            self._item_buffer = ItemBuffer(redis_key=self._redis_key)
             self._item_buffer.start()
         self._item_buffer.put_item(item)
 

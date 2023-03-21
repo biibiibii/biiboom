@@ -13,8 +13,6 @@ class Settings(BaseSettings):
     pgsql_user_name = "postgres"
     pgsql_user_pass = "root"
 
-    redisdb_ip_ports = "127.0.0.1:6379"
-    redisdb_user_pass = ""
     spider_thread_count = 3
 
     site_update_rate = 3600
@@ -47,7 +45,7 @@ class Settings(BaseSettings):
         "https://forum.dfinity.org",
     ]
 
-    news_cn_urls = ["https://www.chainfeeds.xyz/"]
+    news_cn_urls = ["https://www.chainfeeds.xyz"]
 
 
 settings = Settings()

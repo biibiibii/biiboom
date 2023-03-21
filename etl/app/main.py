@@ -1,5 +1,6 @@
-from app.setting_sites import make_forum_requests, make_chainfeeds_request
+from app.setting_sites import (
+    setting_sites,
+)
 from app.spiders.forum_spider import ForumSpider
 
-ForumSpider(request_sites=make_forum_requests()).start()
-ForumSpider(request_sites=make_chainfeeds_request()).start()
+ForumSpider(request_sites=setting_sites.request_sites).start()
