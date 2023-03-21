@@ -51,7 +51,7 @@ class UrlNode(BaseModel):
 
 
 class Site(UpdateItem):
-    __update_key__ = ["next_update_time"]
+    __update_key__ = ["next_update_time", "original_url"]
     id: str
     url: str
     jump_base_url: str = None
@@ -62,6 +62,7 @@ class Site(UpdateItem):
     tags: list[str]
     update_rate: int
     next_update_time: int
+    original_url: str
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
