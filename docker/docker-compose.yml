@@ -1,0 +1,25 @@
+version: "3.6"
+services:
+  graphql-engine:
+    image: hasura/graphql-engine:v2.21.0
+    container_name: graphql-engine
+    ports:
+      - "6000:8080"
+    restart: always
+    environment:
+      ## postgres database to store Hasura metadata
+      # HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://r9VnaDSziLGAR571xQTs:L7rxCr8EL67iZV#9Qp\/@host.docker.internal:8765/hasura
+      ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
+      # PG_DATABASE_URL: postgres://postgres:root@host.docker.internal:5432/hasura
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
+      # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+      ## uncomment next line to set an admin secret
+      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+volumes:
+  db_data:
