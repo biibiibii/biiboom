@@ -9,7 +9,7 @@ services:
     environment:
       ## postgres database to store Hasura metadata
       # HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
-      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://r9VnaDSziLGAR571xQTs:L7rxCr8EL67iZV#9Qp\/@host.docker.internal:8765/hasura
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://r9VnaDSziLGAR571xQTs:X11LC3dk3KncbsN434c5@172.31.45.181:8765/hasura
       ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
       # PG_DATABASE_URL: postgres://postgres:root@host.docker.internal:5432/hasura
       ## enable the console served by server
@@ -20,6 +20,4 @@ services:
       ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
       # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
       ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
-volumes:
-  db_data:
+      HASURA_GRAPHQL_ADMIN_SECRET: 8i4rGgWSfRiG9PfcTTq8
