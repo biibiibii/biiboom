@@ -51,7 +51,7 @@ class UrlNode(BaseModel):
 
 
 class Site(UpdateItem):
-    __update_key__ = ["next_update_time", "original_url"]
+    __update_key__ = ["next_update_time"]
     id: str
     url: str
     jump_base_url: str = None
