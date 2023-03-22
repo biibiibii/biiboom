@@ -1,0 +1,16 @@
+version: "3.6"
+services:
+  pgbase:
+    image: postgres:15.2
+    restart: always
+    ports:
+      - "8765:5432"
+    environment:
+      POSTGRES_PASSWORD: "BGv7eV9Af917hT1K2Nj3"
+      PGDATA: "/var/lib/postgresql/data"
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    restart: always
+
+
