@@ -1,6 +1,7 @@
 version: "3.6"
 services:
   pgbase:
+    container_name: hasura-pgbase-1
     image: postgres:15.2
     restart: always
     ports:
