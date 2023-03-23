@@ -11,7 +11,7 @@ services:
       # HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
       HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://hasura:X11LC3dk3KncbsN434c5@hasura-pgbase-1:5432/hasura
       ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
-      # PG_DATABASE_URL: postgres://postgres:root@host.docker.internal:5432/hasura
+      PG_DATABASE_URL: postgres://hasura:X11LC3dk3KncbsN434c5@hasura-pgbase-1:5432/hasura
       ## enable the console served by server
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
       ## enable debugging mode. It is recommended to disable this in production
