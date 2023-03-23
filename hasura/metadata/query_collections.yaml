@@ -1,0 +1,44 @@
+- name: allowed-queries
+  definition:
+    queries:
+      - name: get_match_rule
+        query: |
+          query GetMatchRule {
+            site(limit: 3) {
+              url
+              rule_id
+              jump_base_url
+              id
+              nodes(limit: 5) {
+                url
+                title
+                site_id
+                posted_at
+                id
+                extra
+                desc
+                _updated_at
+              }
+            }
+          }
+      - name: get_match_rule2
+        query: |
+          query GetMatchRule ($limit: Int) {
+            site(limit: $limit) {
+              name
+              url
+              rule_id
+              jump_base_url
+              id
+              nodes(limit: 20, order_by: {posted_at:desc}) {
+                url
+                title
+                site_id
+                posted_at
+                id
+                extra
+                desc
+                _updated_at
+              }
+            }
+          }

@@ -1,0 +1,15 @@
+table:
+  name: site
+  schema: public
+object_relationships:
+  - name: match_rule
+    using:
+      foreign_key_constraint_on: rule_id
+array_relationships:
+  - name: nodes
+    using:
+      foreign_key_constraint_on:
+        column: site_id
+        table:
+          name: node
+          schema: public

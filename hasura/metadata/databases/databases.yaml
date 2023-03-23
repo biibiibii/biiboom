@@ -1,0 +1,8 @@
+- name: hasura
+  kind: postgres
+  configuration:
+    connection_info:
+      database_url: postgres://postgres:root@host.docker.internal:5432/hasura
+      isolation_level: read-committed
+      use_prepared_statements: false
+  tables: "!include hasura/tables/tables.yaml"

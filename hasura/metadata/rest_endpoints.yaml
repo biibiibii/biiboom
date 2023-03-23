@@ -1,0 +1,18 @@
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: get_match_rule
+  methods:
+    - GET
+  name: get_match_rule
+  url: get_match_rule
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: get_match_rule2
+  methods:
+    - POST
+  name: get_match_rule2
+  url: get_match_rule2
