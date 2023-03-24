@@ -136,3 +136,4 @@ todo.md
 .idea
 
 requirements.txt
+**.env

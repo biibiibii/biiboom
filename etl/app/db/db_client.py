@@ -8,14 +8,14 @@ import unittest
 from feapder import Item, setting
 from feapder.buffer.item_buffer import ItemBuffer
 
-from settings import settings
+from settings_spider import settings_spider
 
 
 class DbClient:
     def __init__(self) -> None:
         self._redis_key = "db_client"
         # Init feapder setting
-        for key, value in settings.feapder_settings.items():
+        for key, value in settings_spider.feapder_settings.items():
             setattr(setting, key, value)
 
         self._item_buffer = None

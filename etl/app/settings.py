@@ -21,18 +21,6 @@ class Settings(BaseSettings):
 
     site_update_rate = 3600
 
-    feapder_settings = dict(
-        ITEM_PIPELINES=["feapder_pipelines.pipelines.pgsql_pipeline.PgsqlPipeline"],
-        SPIDER_MAX_RETRY_TIMES=0,
-        SPIDER_THREAD_COUNT=spider_thread_count,
-        PGSQL_IP=pgsql_ip,
-        PGSQL_PORT=pgsql_port,
-        PGSQL_DB=pgsql_db,
-        PGSQL_USER_NAME=pgsql_user_name,
-        PGSQL_USER_PASS=pgsql_user_pass,
-        LOG_LEVEL="INFO",
-    )
-
     forum_urls = [
         "https://forum.bnbchain.org",
         "https://ethereum-magicians.org",
@@ -69,4 +57,4 @@ if env not in env_list.keys():
 
 settings = Settings(_env_file=env_list[env], _env_file_encoding="utf-8")
 logger = LogHandler(settings.log_name, settings.log_level)
-logger.info(settings.dict())
+logger.debug(settings.dict())

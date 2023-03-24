@@ -4,7 +4,8 @@ from typing import Any
 import feapder
 
 from model import Site, RuleType, MatchRule, Node, RequestSite
-from settings import settings, logger
+from settings import logger
+from settings_spider import settings_spider
 from utils import Utils
 
 
@@ -67,7 +68,8 @@ def parse_json(request, response):
 
 
 class ForumSpider(feapder.AirSpider):
-    __custom_setting__ = settings.feapder_settings
+    __custom_setting__ = settings_spider.feapder_settings
+    logger.info(__custom_setting__)
 
     def __init__(self, request_sites: list[RequestSite], thread_count=None):
         logger.info(f"start {self.__class__.__name__}...")
