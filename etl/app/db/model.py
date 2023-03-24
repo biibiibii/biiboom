@@ -8,6 +8,7 @@ import unittest
 
 from peewee import Model, CharField, IntegerField, ForeignKeyField
 from playhouse.postgres_ext import PostgresqlExtDatabase, JSONField
+from playhouse.shortcuts import model_to_dict
 
 from settings import settings, logger
 
@@ -54,7 +55,7 @@ class SiteModel(BaseExtModel):
     update_rate: int = IntegerField()
     original_url: str = CharField()
 
-    rule: MatchRuleModel = ForeignKeyField(MatchRuleModel, backref="rule")
+    rule: MatchRuleModel = ForeignKeyField(MatchRuleModel)
 
     class Meta:
         database = pgsql_db
@@ -75,7 +76,10 @@ class SiteModelTestCase(unittest.TestCase):
         data_list = SiteModel.select_next_updates()
         logger.debug(f"data size: {len(data_list)}")
         for item in data_list:
-            logger.debug(f"item: {item} {item.name} {item.tags} {item.rule.container}")
+            logger.debug(
+                f"item: {item} {item.name} {item.rule_id} {item.rule.container}"
+            )
+            logger.debug(f"dict: {model_to_dict(item, backrefs=True)}")
 
 
 if __name__ == "__main__":

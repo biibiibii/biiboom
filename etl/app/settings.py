@@ -23,6 +23,9 @@ class Settings(BaseSettings):
 
     page_size = 50
 
+    # schedule job time: second
+    scheduler_trigger = 3
+
     forum_urls = [
         "https://forum.bnbchain.org",
         "https://ethereum-magicians.org",
