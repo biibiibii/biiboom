@@ -2,9 +2,9 @@ import unittest
 
 from pydantic import BaseSettings
 
-from app.db.db_client import db_client
-from app.model import RuleType, MatchRule
-from app.settings import logger
+from db.db_client import db_client
+from model import RuleType, MatchRule
+from settings import logger
 
 __all__ = ["setting_rules"]
 

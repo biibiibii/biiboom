@@ -3,9 +3,9 @@ from typing import Any
 
 import feapder
 
-from app.model import Site, RuleType, MatchRule, Node, RequestSite
-from app.settings import settings, logger
-from app.utils import Utils
+from model import Site, RuleType, MatchRule, Node, RequestSite
+from settings import settings, logger
+from utils import Utils
 
 
 def parse_html(request, response) -> list[Any]:

@@ -1,6 +1,6 @@
 from pydantic import BaseSettings
 
-from app.log_handler import LogHandler
+from log_handler import LogHandler
 
 
 class Settings(BaseSettings):
@@ -50,3 +50,4 @@ class Settings(BaseSettings):
 
 settings = Settings()
 logger = LogHandler(settings.log_name, settings.log_level)
+logger.info(settings.dict())

@@ -7,8 +7,8 @@ from typing import Any
 from feapder import Item, UpdateItem
 from pydantic import BaseModel
 
-from app.settings import settings
-from app.utils import Utils
+from settings import settings
+from utils import Utils
 
 
 class RuleType(Enum):

@@ -8,7 +8,7 @@ import unittest
 from feapder import Item, setting
 from feapder.buffer.item_buffer import ItemBuffer
 
-from app.settings import settings
+from settings import settings
 
 
 class DbClient:

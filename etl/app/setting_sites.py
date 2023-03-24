@@ -7,11 +7,11 @@ import unittest
 
 from pydantic import BaseSettings
 
-from app.db.db_client import db_client
-from app.model import RequestSite, Site
-from app.setting_rules import setting_rules
-from app.settings import settings, logger
-from app.utils import Utils
+from db.db_client import db_client
+from model import RequestSite, Site
+from setting_rules import setting_rules
+from settings import settings, logger
+from utils import Utils
 
 __all__ = ["setting_sites"]
 
