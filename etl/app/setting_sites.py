@@ -8,7 +8,7 @@ import unittest
 from pydantic import BaseSettings
 
 from db.item_client import item_client
-from model import RequestSite, Site
+from db.model import RequestSite, Site
 from setting_rules import setting_rules
 from settings import settings, logger
 from utils import Utils
