@@ -13,6 +13,7 @@ from db.items import RequestSite, Site, MatchRule
 from db.model import SiteModel
 from setting_rules import setting_rules
 from settings import settings, logger
+from spiders.forum_spider import ForumSpider
 from utils import Utils
 
 __all__ = ["setting_sites"]
@@ -116,6 +117,8 @@ class RequestsTestCase(unittest.TestCase):
         logger.debug(f"updates: {next_updates}")
 
     def test_chainfeeds(self):
+        feeds = make_chainfeeds_request()
+        ForumSpider(request_sites=feeds).start()
         pass
 
 

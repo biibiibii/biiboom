@@ -44,7 +44,7 @@ class SpiderScheduler:
             "interval",
             seconds=settings.scheduler_trigger,
             id="spider_job",
-            replace_existing=True,
+            replace_existing=False,
         )
         self._scheduler.start()
 
