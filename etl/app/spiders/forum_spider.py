@@ -3,7 +3,7 @@ from typing import Any
 
 import feapder
 
-from db.model import Site, RuleType, MatchRule, Node, RequestSite
+from db.items import Site, RuleType, MatchRule, Node, RequestSite
 from settings import logger
 from settings_spider import settings_spider
 from utils import Utils

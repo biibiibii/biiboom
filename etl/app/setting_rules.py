@@ -3,7 +3,7 @@ import unittest
 from pydantic import BaseSettings
 
 from db.item_client import item_client
-from db.model import RuleType, MatchRule
+from db.items import RuleType, MatchRule
 from settings import logger
 
 __all__ = ["setting_rules"]

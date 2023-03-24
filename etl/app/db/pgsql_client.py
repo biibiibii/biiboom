@@ -19,5 +19,7 @@ class PgSqlClient(PgsqlDB):
         super().__init__()
 
 
+pgsql_client = PgSqlClient()
+
 if __name__ == "__main__":
     unittest.main()
