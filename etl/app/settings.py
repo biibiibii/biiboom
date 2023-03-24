@@ -21,6 +21,8 @@ class Settings(BaseSettings):
 
     site_update_rate = 3600
 
+    page_size = 50
+
     forum_urls = [
         "https://forum.bnbchain.org",
         "https://ethereum-magicians.org",

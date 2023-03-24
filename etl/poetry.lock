@@ -1057,6 +1057,17 @@ files = [
 ]
 
 [[package]]
+name = "peewee"
+version = "3.16.0"
+description = "a little orm"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "peewee-3.16.0.tar.gz", hash = "sha256:1800c0a04962ee99d161c07f5a12fc49549caf5cfcda426a9103e34e37f854ba"},
+]
+
+[[package]]
 name = "pexpect"
 version = "4.8.0"
 description = "Pexpect allows easy control of interactive console applications."
@@ -1867,4 +1878,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "3.9.16"
-content-hash = "4bae24fed5e45afc377ea9181443579765cd9a8602a3c67459a352b7672bdb0b"
+content-hash = "8221d1ae701e0a5c357b36aa9c587617a212f8cc87662e1c39058ff3a1b4be46"
