@@ -3,10 +3,30 @@ import type { SiteData } from './data';
 
 export async function querySiteNodes(): Promise<{ data: { site: SiteData[] } }> {
   const payload = {
-    query:
-      'query GetMatchRule {\n  site(limit: 30) {\n    name\n    url\n    rule_id\n    jump_base_url\n    id\n    nodes(limit: 30, order_by: {posted_at: desc}) {\n      url\n      title\n      site_id\n      posted_at\n      id\n      extra\n      desc\n      _updated_at\n    }\n  }\n}\n',
+    query: `
+query GetSiteNodes {
+  site(limit: 30) {
+    name
+    url
+    rule_id
+    jump_base_url
+    id
+    nodes(limit: 30, order_by: {posted_at: desc}) {
+      url
+      title
+      site_id
+      posted_at
+      id
+      extra
+      desc
+      _updated_at
+    }
+  }
+}
+
+`,
     variables: null,
-    operationName: 'GetMatchRule',
+    operationName: 'GetSiteNodes',
   };
   const resp = request('/v1/graphql', {
     method: 'post',
