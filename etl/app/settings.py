@@ -1,6 +1,10 @@
+import os
+
 from pydantic import BaseSettings
 
 from log_handler import LogHandler
+
+logger = LogHandler("settings", "INFO")
 
 
 class Settings(BaseSettings):
@@ -47,7 +51,22 @@ class Settings(BaseSettings):
 
     news_cn_urls = ["https://www.chainfeeds.xyz"]
 
+    class Config:
+        env_file = ".local.env"
+        env_file_encoding = "utf-8"
 
-settings = Settings()
+
+env_list = {
+    "local": ".local.env",
+    "dev": ".dev.env",
+    "prod": ".prod.env",
+}
+env = os.getenv("env", "local")
+logger.info("env: {} ---> load env file: {}".format(env, env_list[env]))
+
+if env not in env_list.keys():
+    raise Exception("env: {} not supported. support env: ".format(env, env_list))
+
+settings = Settings(_env_file=env_list[env], _env_file_encoding="utf-8")
 logger = LogHandler(settings.log_name, settings.log_level)
 logger.info(settings.dict())
