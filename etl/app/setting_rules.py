@@ -2,7 +2,7 @@ import unittest
 
 from pydantic import BaseSettings
 
-from db.db_client import db_client
+from db.item_client import item_client
 from model import RuleType, MatchRule
 from settings import logger
 
@@ -39,8 +39,8 @@ class SettingRules(BaseSettings):
     def update_rules(self):
         _rules = [self.dict().get(item) for item in self.dict()]
         logger.debug(f"all rules: {_rules}")
-        db_client.put_items(_rules)
-        db_client.save()
+        item_client.put_items(_rules)
+        item_client.save()
 
 
 setting_rules = SettingRules()

@@ -11,7 +11,7 @@ from feapder.buffer.item_buffer import ItemBuffer
 from settings_spider import settings_spider
 
 
-class DbClient:
+class ItemClient:
     def __init__(self) -> None:
         self._redis_key = "db_client"
         # Init feapder setting
@@ -35,7 +35,7 @@ class DbClient:
         self._item_buffer.stop()
 
 
-db_client = DbClient()
+item_client = ItemClient()
 
 if __name__ == "__main__":
     unittest.main()

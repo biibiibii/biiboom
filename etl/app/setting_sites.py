@@ -7,7 +7,7 @@ import unittest
 
 from pydantic import BaseSettings
 
-from db.db_client import db_client
+from db.item_client import item_client
 from model import RequestSite, Site
 from setting_rules import setting_rules
 from settings import settings, logger
@@ -76,9 +76,9 @@ class SettingSites(BaseSettings):
     def update_sites(self):
         sites = self.request_sites
         for site in sites:
-            db_client.put_item(site.site)
-            db_client.put_item(site.rule)
-        db_client.save()
+            item_client.put_item(site.site)
+            item_client.put_item(site.rule)
+        item_client.save()
 
 
 setting_sites = SettingSites()
