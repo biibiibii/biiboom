@@ -80,4 +80,7 @@ export default defineConfig({
   mfsu: {},
   webpack5: {},
   exportStatic: {},
+  define: {
+    API_URL: 'https://api.biiboom.com',
+  },
 });
