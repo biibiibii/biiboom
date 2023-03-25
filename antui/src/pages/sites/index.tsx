@@ -7,9 +7,12 @@ import { querySiteNodes } from './service';
 import type { SiteData } from './data';
 import moment from 'moment';
 
-const ForumList: FC = () => {
+const SiteList: FC = (props) => {
+  const path = props.route.path;
+  const tag = path.substring(path.lastIndexOf('/') + 1);
+
   const { loading, data } = useRequest(() => {
-    return querySiteNodes();
+    return querySiteNodes(tag);
   });
 
   const nodesData: SiteData[] = data?.site || [];
@@ -20,7 +23,7 @@ const ForumList: FC = () => {
         <Row gutter={12} className={styles.nodesRow}>
           {nodesData.map((item) =>
             item.nodes.length > 0 ? (
-              <Col xl={6} lg={12} sm={12} xs={24} style={{ marginBottom: 12 }}>
+              <Col xl={6} lg={12} sm={12} xs={24} style={{ marginBottom: 12 }} key={item.id}>
                 <Card
                   title={
                     <a href={item.original_url} target="_blank" className={styles.nodesItemTitle}>
@@ -34,8 +37,8 @@ const ForumList: FC = () => {
                 >
                   <ul className={styles.nodesList}>
                     {item.nodes.map((node, i) => (
-                      <a href={node.url} target="_blank">
-                        <li key={node.title}>
+                      <a href={node.url} target="_blank" key={node.id}>
+                        <li>
                           <span
                             className={`${styles.nodesItemNumber} ${i < 3 ? styles.active : ''}`}
                           >
@@ -65,4 +68,4 @@ const ForumList: FC = () => {
   );
 };
 
-export default ForumList;
+export default SiteList;
