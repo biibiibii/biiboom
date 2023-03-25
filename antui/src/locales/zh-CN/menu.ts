@@ -1,5 +1,6 @@
 export default {
   'menu.forum': '论坛',
+  'menu.news': '新闻',
   'menu.home': '首页',
 
   'menu.exception.403': '403',
