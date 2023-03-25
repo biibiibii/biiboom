@@ -45,14 +45,14 @@ class Settings(BaseSettings):
     news_cn_urls = ["https://www.chainfeeds.xyz"]
 
     class Config:
-        env_file = ".local.env"
+        env_file = "./app/.local.env"
         env_file_encoding = "utf-8"
 
 
 env_list = {
-    "local": ".local.env",
-    "dev": ".dev.env",
-    "prod": ".prod.env",
+    "local": "./app/.local.env",
+    "dev": "./app/.dev.env",
+    "prod": "./app/.prod.env",
 }
 env = os.getenv("env", "local")
 logger.info("env: {} ---> load env file: {}".format(env, env_list[env]))
