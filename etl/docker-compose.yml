@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  biiboom_etl:
+    build: .
+    container_name: biiboom-etl
+    restart: always
+    networks:
+      - biiboom
+    environment:
+      env: local
+      pgsql_ip: host.docker.internal
+networks:
+  biiboom:
