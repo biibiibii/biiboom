@@ -1,7 +1,8 @@
-import { Space } from 'antd';
+import { Space, Switch } from 'antd';
 import React from 'react';
-import { useModel, SelectLang } from 'umi';
+import { useModel, SelectLang, FormattedMessage } from 'umi';
 import styles from './index.less';
+import { CheckOutlined } from '@ant-design/icons';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -21,6 +22,13 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <Space className={className}>
+      {/* <Switch
+        checkedChildren={<CheckOutlined />}
+        unCheckedChildren={<FormattedMessage id="component.globalHeader.darkTheme" />}
+        onChange={(checked: boolean) => {
+          console.log(`switch to ${checked}`);
+        }}
+      /> */}
       <SelectLang className={styles.action} />
     </Space>
   );

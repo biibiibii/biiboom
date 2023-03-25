@@ -67,13 +67,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       content: initialState?.currentUser?.name,
     },
     footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
-      }
-    },
+    onPageChange: () => {},
     links: [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
