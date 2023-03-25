@@ -4,7 +4,7 @@ services:
     image: hasura/graphql-engine:v2.21.0
     container_name: graphql-engine
     ports:
-      - "6000:8080"
+      - "6060:8080"
     restart: always
     environment:
       ## postgres database to store Hasura metadata
@@ -21,3 +21,5 @@ services:
       # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
       ## uncomment next line to set an admin secret
       HASURA_GRAPHQL_ADMIN_SECRET: 8i4rGgWSfRiG9PfcTTq8
+      #   HASURA_GRAPHQL_ENABLE_ALLOWLIST: true
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
