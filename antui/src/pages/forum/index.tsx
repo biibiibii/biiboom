@@ -8,7 +8,9 @@ import type { SiteData } from './data';
 import moment from 'moment';
 
 const ForumList: FC = () => {
-  const { loading, data } = useRequest(querySiteNodes);
+  const { loading, data } = useRequest(() => {
+    return querySiteNodes();
+  });
 
   const nodesData: SiteData[] = data?.site || [];
 

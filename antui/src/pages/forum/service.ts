@@ -1,11 +1,15 @@
 import { request } from 'umi';
 import type { SiteData } from './data';
 
-export async function querySiteNodes(): Promise<{ data: { site: SiteData[] } }> {
+export async function querySiteNodes(tag: string = ''): Promise<{ data: { site: SiteData[] } }> {
+  let filter = ``;
+  if (tag.length > 0) {
+    filter = `tags: { _contains: ${tag} } `;
+  }
   const payload = {
     query: `
 query GetSiteNodes {
-  site(limit: 30) {
+  site(limit: 30, where: {${filter}}) {
     name
     sub_name
     url
@@ -25,9 +29,6 @@ query GetSiteNodes {
     }
   }
 }
-
-
-
 `,
     variables: null,
     operationName: 'GetSiteNodes',
