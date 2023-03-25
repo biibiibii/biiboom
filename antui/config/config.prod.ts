@@ -13,6 +13,7 @@ export default defineConfig({
     babelOptions: {},
   },
   define: {
-    API_URL: 'http://3.143.126.224:6060',
+    // API_URL: 'http://3.143.126.224:6060',
+    API_URL: 'https://api.biiboom.com',
   },
 });
