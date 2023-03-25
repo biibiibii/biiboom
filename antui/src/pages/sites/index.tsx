@@ -1,4 +1,4 @@
-import { Card, Col, Row } from 'antd';
+import { Card, Col, Row, Spin, Space } from 'antd';
 import type { FC } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import styles from './style.less';
@@ -64,6 +64,14 @@ const SiteList: FC = (props) => {
           )}
         </Row>
       </>
+
+      {loading ? (
+        <Row justify="center" className={styles.loading}>
+          <Spin size="large" />
+        </Row>
+      ) : (
+        ''
+      )}
     </GridContent>
   );
 };
