@@ -12,8 +12,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 export const request: RequestConfig = {
-  prefix: 'http://localhost:8090',
-  // prefix: 'http://3.143.126.224:6060',
+  prefix: API_URL,
   timeout: 1000,
   errorConfig: {},
   middlewares: [],

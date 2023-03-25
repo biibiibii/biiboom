@@ -13,6 +13,6 @@ export default defineConfig({
     babelOptions: {},
   },
   define: {
-    API_URL: 'http://localhost:8090',
+    API_URL: 'http://3.143.126.224:6060',
   },
 });
