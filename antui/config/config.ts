@@ -34,14 +34,20 @@ export default defineConfig({
   // umi routes: https://umijs.org/docs/routing
   routes: [
     {
-      path: '/forum/index',
+      path: '/tag/forum',
       name: 'forum',
       icon: 'comment',
-      component: './forum',
+      component: './tag',
+    },
+    {
+      path: '/tag/news',
+      name: 'news',
+      icon: 'comment',
+      component: './tag',
     },
     {
       path: '/',
-      redirect: '/forum/index',
+      redirect: '/tag/forum',
     },
     {
       component: '404',
