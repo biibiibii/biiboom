@@ -3,6 +3,7 @@ services:
   biiboom_etl:
     build: .
     container_name: biiboom-etl
+    platform: linux/amd64
     restart: always
     networks:
       - biiboom
