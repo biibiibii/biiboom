@@ -20,12 +20,7 @@ query GetSiteNodes {
     nodes(limit: 30, order_by: {posted_at: desc}) {
       url
       title
-      site_id
       posted_at
-      id
-      extra
-      desc
-      _updated_at
     }
   }
 }
