@@ -10,9 +10,11 @@ export type NodeType = {
 
 export interface SiteData {
   name: string;
+  sub_name: string;
   url: string;
   rule_id: string;
   jump_base_url: string;
+  original_url: string;
   id: string;
   nodes: NodeType[];
 }

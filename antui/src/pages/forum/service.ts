@@ -7,9 +7,11 @@ export async function querySiteNodes(): Promise<{ data: { site: SiteData[] } }> 
 query GetSiteNodes {
   site(limit: 30) {
     name
+    sub_name
     url
     rule_id
     jump_base_url
+    original_url
     id
     nodes(limit: 30, order_by: {posted_at: desc}) {
       url
@@ -23,6 +25,8 @@ query GetSiteNodes {
     }
   }
 }
+
+
 
 `,
     variables: null,

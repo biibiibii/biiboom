@@ -20,7 +20,11 @@ const ForumList: FC = () => {
             item.nodes.length > 0 ? (
               <Col xl={6} lg={12} sm={12} xs={24} style={{ marginBottom: 12 }}>
                 <Card
-                  title={item.name}
+                  title={
+                    <a href={item.original_url} target="_blank" className={styles.nodesItemTitle}>
+                      {item.sub_name ? item.name + ' ' + item.sub_name : item.name}
+                    </a>
+                  }
                   bodyStyle={{ textAlign: 'center', fontSize: 0, padding: 6 }}
                   bordered={false}
                   size={'small'}
