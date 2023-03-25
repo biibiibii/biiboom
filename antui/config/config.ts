@@ -37,13 +37,13 @@ export default defineConfig({
       path: '/tag/forum',
       name: 'forum',
       icon: 'comment',
-      component: './tag',
+      component: './sites',
     },
     {
       path: '/tag/news',
       name: 'news',
       icon: 'comment',
-      component: './tag',
+      component: './sites',
     },
     {
       path: '/',
