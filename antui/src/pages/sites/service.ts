@@ -2,9 +2,9 @@ import { request } from 'umi';
 import type { SiteData } from './data';
 
 export async function querySiteNodes(tag: string = ''): Promise<{ data: { site: SiteData[] } }> {
-  let filter = ``;
+  let filter = `status: {_eq: 1},`;
   if (tag.length > 0) {
-    filter = `tags: { _contains: ${tag} } `;
+    filter = `${filter} tags: { _contains: ${tag} } `;
   }
   const payload = {
     query: `
