@@ -22,6 +22,10 @@ def spider_job() -> None:
     ForumSpider(request_sites=setting_sites.get_next_updates()).start()
 
 
+def update_sites_job() -> None:
+    setting_sites.update_sites()
+
+
 class SpiderScheduler:
     def __init__(self) -> None:
         _interval_task = {
@@ -39,6 +43,7 @@ class SpiderScheduler:
         self._scheduler = BlockingScheduler(**_interval_task)
 
     def start(self):
+        update_sites_job()
         self._scheduler.add_job(
             spider_job,
             "interval",
