@@ -1,3 +1,4 @@
+import time
 import unittest
 from hashlib import sha256
 from typing import Any
@@ -34,6 +35,12 @@ class Utils:
         if len(name_arr) <= 1:
             return name_arr[0]
         return name_arr[len(name_arr) - 2].capitalize()
+
+    @classmethod
+    def to_timestamp(cls, ts: int) -> int:
+        if ts > (int(time.time()) * 10):
+            return int(ts / 1000)
+        return ts
 
 
 class UtilsTestCase(unittest.TestCase):
@@ -103,6 +110,11 @@ class UtilsTestCase(unittest.TestCase):
         ]
         for item in forum_urls:
             print(Utils.get_name_from_url(item))
+
+    def test_to_timestamp(self):
+        self.assertEqual(Utils.to_timestamp(1679734466000), 1679734466)
+        self.assertEqual(Utils.to_timestamp(167973446600), 167973446)
+        self.assertEqual(Utils.to_timestamp(16797344660), 16797344660)
 
 
 if __name__ == "__main__":

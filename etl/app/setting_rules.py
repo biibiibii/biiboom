@@ -36,6 +36,17 @@ class SettingRules(BaseSettings):
         },
     )
 
+    # https://www.marsbit.co/
+    # https://api.marsbit.co/info/news/showinfo
+    rule_marsbit = MatchRule(
+        container="obj.inforList",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="createTime",
+        extra={},
+    )
+
     def update_rules(self):
         _rules = [self.dict().get(item) for item in self.dict()]
         logger.debug(f"all rules: {_rules}")

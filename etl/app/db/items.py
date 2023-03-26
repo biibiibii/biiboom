@@ -4,10 +4,11 @@ import unittest
 from enum import Enum
 from typing import Any
 
+import pytz
 from feapder import Item, UpdateItem
 from pydantic import BaseModel
 
-from settings import settings
+from settings import settings, logger
 from utils import Utils
 
 
@@ -64,6 +65,9 @@ class Site(UpdateItem):
     next_update_time: int
     original_url: str
 
+    request_method: str = "get"
+    request_data: str = None
+
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
         self.id = Utils.unique_hash(self.url)
@@ -88,7 +92,8 @@ class RequestSite(BaseModel):
         arbitrary_types_allowed = True
 
 
-class Node(Item):
+class Node(UpdateItem):
+    __update_key__ = ["posted_at", "url", "title", "extra"]
     id: str
     site_id: str
     url: str
@@ -104,6 +109,14 @@ class Node(Item):
     @property
     def fingerprint(self):
         return self.id
+
+    def pre_to_db(self):
+        logger.debug(f"pre to db: {self.to_dict}")
+        if isinstance(self.posted_at, int):
+            self.posted_at = datetime.datetime.fromtimestamp(
+                Utils.to_timestamp(self.posted_at)
+            ).astimezone(pytz.UTC)
+        logger.debug(f"pre to db: {self.to_dict}")
 
 
 class NodeTestCase(unittest.TestCase):

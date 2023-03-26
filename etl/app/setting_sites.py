@@ -60,6 +60,23 @@ def make_chainfeeds_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule) for site in sites]
 
 
+def make_marbits_request() -> list[RequestSite]:
+    rule = setting_rules.rule_marsbit
+    original_url = "https://www.marsbit.co/"
+    site = Site(
+        url=f"https://api.marsbit.co/info/news/shownews",
+        jump_base_url="https://news.marsbit.co/{id}.html",
+        original_url=original_url,
+        rule_id=rule.id,
+        language="zh",
+        name=Utils.get_name_from_url(original_url),
+        sub_name="新闻",
+        tags=["news"],
+        update_rate=settings.site_update_rate,
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 _request_list = [
     globals()[func]()
     for func in dir()
@@ -107,6 +124,9 @@ setting_sites = SettingSites()
 
 
 class RequestsTestCase(unittest.TestCase):
+    def test_update_sites(self):
+        setting_sites.update_sites()
+
     def test_merge_list(self):
         logger.debug(f"{setting_sites.request_sites}")
         setting_sites.update_sites()
@@ -120,6 +140,10 @@ class RequestsTestCase(unittest.TestCase):
         feeds = make_chainfeeds_request()
         ForumSpider(request_sites=feeds).start()
         pass
+
+    def test_marsbit(self):
+        marsbit = make_marbits_request()
+        ForumSpider(request_sites=marsbit).start()
 
 
 if __name__ == "__main__":

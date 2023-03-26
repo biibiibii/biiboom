@@ -32,10 +32,19 @@ def parse_html(request, response) -> list[Any]:
             for item in rule.extra:
                 extra[item] = td.xpath(rule.extra[item]).extract()
             node.extra = extra
-        nodes.append(node)
+        if len(node.title) > 0 and len(node.url) > 0:
+            nodes.append(node)
         logger.debug(f"node: {node}")
     logger.info(f"node size: {len(nodes)}")
     return nodes
+
+
+def parse_jump_url(base_url: str, item_url_id: str) -> str:
+    if not base_url:
+        return item_url_id
+    if "{id}" in base_url:
+        return base_url.replace("{id}", item_url_id)
+    return f"{base_url}{item_url_id}"
 
 
 def parse_json(request, response):
@@ -46,10 +55,10 @@ def parse_json(request, response):
 
     data_list = Utils.json_path(response.json, rule.container)
     for item in data_list:
-        item_url = Utils.json_path(item, rule.url)
+        item_url_id = Utils.json_path(item, rule.url)
         node = Node(
             title=Utils.json_path(item, rule.title),
-            url=f"{site.jump_base_url}{item_url}" if site.jump_base_url else item_url,
+            url=parse_jump_url(site.jump_base_url, item_url_id),
             site_id=site.id,
         )
         if rule.desc:
@@ -62,7 +71,8 @@ def parse_json(request, response):
                 extra[i] = Utils.json_path(item, rule.extra[i])
             node.extra = extra
         logger.debug(f"node: {node}")
-        nodes.append(node)
+        if len(node.title) > 0 and len(node.url) > 0:
+            nodes.append(node)
     logger.info(f"node size: {len(nodes)}")
     return nodes
 
@@ -79,7 +89,9 @@ class ForumSpider(feapder.AirSpider):
     def start_requests(self):
         for item in self.request_nodes:
             logger.info(f"start request url: {item.site.url}")
-            yield feapder.Request(item.site.url, request_site=item)
+            yield feapder.Request(
+                item.site.url, data=item.site.request_data, request_site=item
+            )
 
     def parse(self, request, response):
         rule = request.request_site.rule
@@ -126,6 +138,20 @@ class ForumSpiderTestCase(unittest.TestCase):
         logger.debug(f"site:{site}")
 
         ForumSpider(request_sites=[request_site]).start()
+
+    def test_parse_jump_url(self):
+        base_url = "https://news.marsbit.co/{id}.html"
+        item_id = "20230325094746660158"
+        self.assertEqual(
+            parse_jump_url(base_url, item_id),
+            "https://news.marsbit.co/20230325094746660158.html",
+        )
+        base_url = "https://www.chainfeeds.xyz/feed/detail/"
+        item_id = "68c58246-44ea-47a0-8eea-8087fa9898ad"
+        self.assertEqual(
+            parse_jump_url(base_url, item_id),
+            "https://www.chainfeeds.xyz/feed/detail/68c58246-44ea-47a0-8eea-8087fa9898ad",
+        )
 
 
 if __name__ == "__main__":
