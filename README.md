@@ -1,5 +1,10 @@
 # biihub
 
+```
+push main branch of git will deploy frontend to PROD env
+PROD env is hosting on vercel.
+```
+
 ## antui
 
 current frontend
