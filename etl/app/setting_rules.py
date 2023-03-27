@@ -47,6 +47,18 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # bnbchain blog
+    # https://bnbchain.org/en/blog/page-data/index/page-data.json
+    # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
+    rule_bnbchain_blog = MatchRule(
+        container="result.data.en.edges",
+        title="node.title",
+        url="node.slug",
+        rule_type=RuleType.json.value,
+        posted_at="published_at",
+        extra={},
+    )
+
     def update_rules(self):
         _rules = [self.dict().get(item) for item in self.dict()]
         logger.debug(f"all rules: {_rules}")

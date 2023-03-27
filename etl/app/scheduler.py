@@ -42,8 +42,9 @@ class SpiderScheduler:
         }
         self._scheduler = BlockingScheduler(**_interval_task)
 
-    def start(self):
-        update_sites_job()
+    def start(self, update_sites=False):
+        if update_sites:
+            update_sites_job()
         self._scheduler.add_job(
             spider_job,
             "interval",

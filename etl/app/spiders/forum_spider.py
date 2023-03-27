@@ -90,14 +90,17 @@ class ForumSpider(feapder.AirSpider):
         for item in self.request_nodes:
             logger.info(f"start request url: {item.site.url}")
             yield feapder.Request(
-                item.site.url, data=item.site.request_data, request_site=item
+                item.site.url,
+                data=item.site.request_data,
+                request_site=item,
             )
 
     def parse(self, request, response):
+        logger.debug(f"response: {response.text}")
         rule = request.request_site.rule
         site = request.request_site.site
 
-        logger.debug(f"response type: {rule}")
+        logger.debug(f"parse rule: {rule}")
         if rule.rule_type == RuleType.html.value:
             nodes = parse_html(request, response)
         elif rule.rule_type == RuleType.json.value:

@@ -77,6 +77,23 @@ def make_marbits_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_bnbchain_blog_request() -> list[RequestSite]:
+    rule = setting_rules.rule_bnbchain_blog
+    original_url = "https://bnbchain.org/en/blog/"
+    site = Site(
+        url=f"https://bnbchain.org/en/blog/page-data/index/page-data.json",
+        jump_base_url="https://bnbchain.org/en/blog/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language="en",
+        name=Utils.get_name_from_url(original_url),
+        sub_name="blog",
+        tags=["blog"],
+        update_rate=settings.site_update_rate,
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 _request_list = [
     globals()[func]()
     for func in dir()
@@ -144,6 +161,10 @@ class RequestsTestCase(unittest.TestCase):
     def test_marsbit(self):
         marsbit = make_marbits_request()
         ForumSpider(request_sites=marsbit).start()
+
+    def test_bnbchain_blog(self):
+        bnbchain_blog = make_bnbchain_blog_request()
+        ForumSpider(request_sites=bnbchain_blog).start()
 
 
 if __name__ == "__main__":
