@@ -90,6 +90,7 @@ def make_bnbchain_blog_request() -> list[RequestSite]:
         sub_name="blog",
         tags=["blog"],
         update_rate=settings.site_update_rate,
+        next_update_time=0,
     )
     return [RequestSite(site=site, rule=rule)]
 

@@ -73,15 +73,13 @@ class Site(UpdateItem):
         self.id = Utils.unique_hash(self.url)
         if "update_rate" not in self.to_dict:
             self.update_rate = settings.site_update_rate
-        self.next_update_time = int(time.time()) + self.update_rate
 
     @property
     def fingerprint(self):
         return self.id
 
-    @classmethod
-    def from_dict(cls, url_list: list[UrlNode], rule_dict: dict) -> "list[Site]":
-        return [__class__(**{**item.dict(), **rule_dict}) for item in url_list]
+    def update_next_time(self):
+        self.next_update_time = int(time.time()) + self.update_rate
 
 
 class RequestSite(BaseModel):

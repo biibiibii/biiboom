@@ -111,6 +111,7 @@ class ForumSpider(feapder.AirSpider):
         for item in nodes:
             yield item
         # Update next update time
+        site.update_next_time()
         yield site
         # yield rule
 
