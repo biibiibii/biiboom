@@ -55,7 +55,7 @@ class SettingRules(BaseSettings):
         title="node.title",
         url="node.slug",
         rule_type=RuleType.json.value,
-        posted_at="published_at",
+        posted_at="node.published_at",
         extra={},
     )
 
