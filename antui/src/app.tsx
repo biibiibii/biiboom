@@ -10,7 +10,7 @@ import defaultSettings from '../config/defaultSettings';
 
 export const request: RequestConfig = {
   prefix: API_URL,
-  timeout: 1000,
+  timeout: 2000,
   errorConfig: {},
   middlewares: [],
   requestInterceptors: [],
