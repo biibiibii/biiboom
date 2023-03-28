@@ -73,6 +73,8 @@ class Site(UpdateItem):
         self.id = Utils.unique_hash(self.url)
         if "update_rate" not in self.to_dict:
             self.update_rate = settings.site_update_rate
+        if "name" not in self.to_dict:
+            self.name = Utils.get_name_from_url(self.original_url)
 
     @property
     def fingerprint(self):

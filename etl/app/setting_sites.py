@@ -32,7 +32,6 @@ def make_forum_requests() -> list[RequestSite]:
             name=Utils.get_name_from_url(item),
             sub_name="Forum",
             tags=["forum"],
-            update_rate=settings.site_update_rate,
         )
         for item in url_list
     ]
@@ -53,7 +52,6 @@ def make_chainfeeds_request() -> list[RequestSite]:
             name=Utils.get_name_from_url(item),
             sub_name="发现",
             tags=["news"],
-            update_rate=settings.site_update_rate,
         )
         for item in url_list
     ]
@@ -72,7 +70,6 @@ def make_marbits_request() -> list[RequestSite]:
         name=Utils.get_name_from_url(original_url),
         sub_name="新闻",
         tags=["news"],
-        update_rate=settings.site_update_rate,
     )
     return [RequestSite(site=site, rule=rule)]
 
@@ -89,8 +86,21 @@ def make_bnbchain_blog_request() -> list[RequestSite]:
         name=Utils.get_name_from_url(original_url),
         sub_name="blog",
         tags=["blog"],
-        update_rate=settings.site_update_rate,
-        next_update_time=0,
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_ethereum_blog_request() -> list[RequestSite]:
+    rule = setting_rules.rule_ethereum_blog
+    original_url = "https://blog.ethereum.org/"
+    site = Site(
+        url=f"https://blog.ethereum.org/_next/data/4tYBiKFBGW9-G-BSIr4zA/en.json",
+        jump_base_url=original_url,
+        original_url=original_url,
+        rule_id=rule.id,
+        language="en",
+        sub_name="blog",
+        tags=["blog"],
     )
     return [RequestSite(site=site, rule=rule)]
 
@@ -166,6 +176,10 @@ class RequestsTestCase(unittest.TestCase):
     def test_bnbchain_blog(self):
         bnbchain_blog = make_bnbchain_blog_request()
         ForumSpider(request_sites=bnbchain_blog).start()
+
+    def test_ethereum_blog(self):
+        ethereum = make_ethereum_blog_request()
+        ForumSpider(request_sites=ethereum).start()
 
 
 if __name__ == "__main__":

@@ -59,6 +59,19 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # https://blog.ethereum.org/
+    # https://blog.ethereum.org/_next/data/4tYBiKFBGW9-G-BSIr4zA/en.json
+    rule_ethereum_blog = MatchRule(
+        container="pageProps.allPostsData",
+        title="frontmatter.title",
+        url="url",
+        rule_type=RuleType.json.value,
+        posted_at="frontmatter.date",
+        extra={
+            "tags": "frontmatter.category",
+        },
+    )
+
     def update_rules(self):
         _rules = [self.dict().get(item) for item in self.dict()]
         logger.debug(f"all rules: {_rules}")
