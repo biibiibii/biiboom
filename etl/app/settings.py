@@ -48,6 +48,10 @@ class Settings(BaseSettings):
         "https://forums.eoscommunity.org",
         "https://forum.algorand.org",
         "https://forum.apecoin.com",
+        "https://research.lido.fi",
+        "https://gov.uniswap.org",
+        "https://forum.thegraph.com",
+        "https://forum.stacks.org",
     ]
 
     news_cn_urls = ["https://www.chainfeeds.xyz"]
