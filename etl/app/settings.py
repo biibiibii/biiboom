@@ -40,6 +40,14 @@ class Settings(BaseSettings):
         "https://gov.optimism.io",
         "https://forums.sui.io",
         "https://forum.dfinity.org",
+        "https://forum.cardano.org",
+        "https://forum.solana.com",
+        "https://forum.makerdao.com",
+        "https://discourse.bitdao.io",
+        "https://forum.fantom.network",
+        "https://forums.eoscommunity.org",
+        "https://forum.algorand.org",
+        "https://forum.apecoin.com",
     ]
 
     news_cn_urls = ["https://www.chainfeeds.xyz"]
