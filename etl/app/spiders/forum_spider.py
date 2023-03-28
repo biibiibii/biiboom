@@ -91,6 +91,7 @@ class ForumSpider(feapder.AirSpider):
             logger.info(f"start request url: {item.site.url}")
             yield feapder.Request(
                 item.site.url,
+                method=item.site.request_method,
                 data=item.site.request_data,
                 request_site=item,
             )
