@@ -47,6 +47,17 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # https://www.odaily.news/
+    # https://www.odaily.news/api/pp/api/app-front/feed-stream?feed_id=280&b_id=&per_page=50
+    rule_news_odaily = MatchRule(
+        container="data.items",
+        title="title",
+        url="entity_id",
+        rule_type=RuleType.json.value,
+        posted_at="published_at",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
