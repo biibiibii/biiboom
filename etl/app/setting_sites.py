@@ -143,6 +143,22 @@ def make_news_jinse_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_8btc_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_8btc
+    original_url = "https://www.8btc.com/"
+    site = Site(
+        url=f"https://www.8btc.com/sitemap",
+        jump_base_url="https://www.8btc.com/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="巴比特",
+        sub_name="资讯",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -246,12 +262,10 @@ class RequestsTestCase(unittest.TestCase):
         ForumSpider(request_sites=marsbit).start()
 
     def test_news_odaily(self):
-        setting_sites.update_sites()
         odaily = make_news_odaily_request()
         ForumSpider(request_sites=odaily).start()
 
     def test_news_wutalk(self):
-        setting_sites.update_sites()
         req = make_news_wutalk_request()
         ForumSpider(request_sites=req).start()
 
@@ -260,8 +274,11 @@ class RequestsTestCase(unittest.TestCase):
         ForumSpider(request_sites=req).start()
 
     def test_news_jinse(self):
-        setting_sites.update_sites()
         req = make_news_jinse_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_8btc(self):
+        req = make_news_8btc_request()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

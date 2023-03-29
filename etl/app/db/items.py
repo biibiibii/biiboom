@@ -132,6 +132,7 @@ class Node(UpdateItem):
                 Utils.to_timestamp(self.posted_at)
             ).astimezone(pytz.UTC)
         elif isinstance(self.posted_at, str):
+            self.posted_at = self.posted_at.strip()
             self.posted_at = datetime.datetime.fromisoformat(self.posted_at).astimezone(
                 pytz.UTC
             )

@@ -91,6 +91,15 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    rule_news_8btc = MatchRule(
+        container="//ul[contains(@class,'bbt-list')]/li",
+        title="./a/text()",
+        url="./a/@href",
+        rule_type=RuleType.html.value,
+        posted_at="./a/span/text()",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
