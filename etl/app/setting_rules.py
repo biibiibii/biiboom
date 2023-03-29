@@ -100,6 +100,15 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    rule_news_chaincatcher = MatchRule(
+        container="data",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="add_time",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json

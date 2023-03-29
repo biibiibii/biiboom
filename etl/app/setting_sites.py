@@ -159,6 +159,27 @@ def make_news_8btc_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_chaincatcher_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_chaincatcher
+    original_url = "https://www.chaincatcher.com/"
+    site = Site(
+        url=f"https://www.chaincatcher.com/api/article/lists",
+        jump_base_url="https://www.chaincatcher.com/article/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="链捕手",
+        sub_name="资讯",
+        tags=[SiteTagsEnum.NEWS.value],
+        request_method="post",
+        request_data={
+            "page": "1",
+            "home": "1",
+        },
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -279,6 +300,10 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_news_8btc(self):
         req = make_news_8btc_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_chaincatcher(self):
+        req = make_news_chaincatcher_request()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):
