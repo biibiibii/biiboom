@@ -74,6 +74,22 @@ def make_news_marbits_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_odaily_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_odaily
+    original_url = "https://www.odaily.news/"
+    site = Site(
+        url=f"https://www.odaily.news/api/pp/api/app-front/feed-stream?feed_id=280&b_id=&per_page=50",
+        jump_base_url="https://www.odaily.news/post/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name=Utils.get_name_from_url(original_url),
+        sub_name="新闻",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -172,6 +188,11 @@ class RequestsTestCase(unittest.TestCase):
     def test_marsbit(self):
         marsbit = make_news_marbits_request()
         ForumSpider(request_sites=marsbit).start()
+
+    def test_news_odaily(self):
+        setting_sites.update_sites()
+        odaily = make_news_odaily_request()
+        ForumSpider(request_sites=odaily).start()
 
     def test_bnbchain_blog(self):
         bnbchain_blog = make_blog_bnbchain_request()
