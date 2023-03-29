@@ -80,6 +80,17 @@ class SettingRules(BaseSettings):
         extra={"tags": "tags"},
     )
 
+    # https://www.jinse.com/
+    # https://api.jinse.cn/noah/v3/timelines?catelogue_key=www&limit=50&information_id=&flag=down
+    rule_news_jinse = MatchRule(
+        container="data.list",
+        title="object_1.title",
+        url="object_1.jump_url",
+        rule_type=RuleType.json.value,
+        posted_at="object_1.published_at",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json

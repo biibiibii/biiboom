@@ -127,6 +127,22 @@ def make_news_panews_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_jinse_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_jinse
+    original_url = "https://www.jinse.com/"
+    site = Site(
+        url=f"https://api.jinse.cn/noah/v3/timelines?catelogue_key=www&limit=50&information_id=&flag=down",
+        jump_base_url="",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="金色财经",
+        sub_name="头条",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -205,6 +221,9 @@ setting_sites = SettingSites()
 
 
 class RequestsTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        setting_sites.update_sites()
+
     def test_update_sites(self):
         setting_sites.update_sites()
 
@@ -237,8 +256,12 @@ class RequestsTestCase(unittest.TestCase):
         ForumSpider(request_sites=req).start()
 
     def test_news_panews(self):
-        setting_sites.update_sites()
         req = make_news_panews_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_jinse(self):
+        setting_sites.update_sites()
+        req = make_news_jinse_request()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

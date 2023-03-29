@@ -32,7 +32,7 @@ def parse_html(request, response) -> list[Any]:
             for item in rule.extra:
                 extra[item] = td.xpath(rule.extra[item]).extract()
             node.extra = extra
-        if len(node.title) > 0 and len(node.url) > 0:
+        if node.title and node.url and len(node.title) > 0 and len(node.url) > 0:
             nodes.append(node)
         logger.debug(f"node: {node}")
     logger.info(f"node size: {len(nodes)}")
@@ -71,7 +71,7 @@ def parse_json(request, response):
                 extra[i] = Utils.json_path(item, rule.extra[i])
             node.extra = extra
         logger.debug(f"node: {node}")
-        if len(node.title) > 0 and len(node.url) > 0:
+        if node.title and node.url and len(node.title) > 0 and len(node.url) > 0:
             nodes.append(node)
     logger.info(f"node size: {len(nodes)}")
     return nodes
