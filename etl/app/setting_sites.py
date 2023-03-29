@@ -9,7 +9,7 @@ from playhouse.shortcuts import model_to_dict
 from pydantic import BaseSettings
 
 from db.item_client import item_client
-from db.items import RequestSite, Site, MatchRule
+from db.items import RequestSite, Site, MatchRule, SiteLanguageEnum, SiteTagsEnum
 from db.model import SiteModel
 from setting_rules import setting_rules
 from settings import settings, logger
@@ -28,10 +28,10 @@ def make_forum_requests() -> list[RequestSite]:
             jump_base_url=f"{item}/t/",
             original_url=f"{item}/latest/",
             rule_id=rule.id,
-            language="en",
+            language=SiteLanguageEnum.EN.value,
             name=Utils.get_name_from_url(item),
             sub_name="Forum",
-            tags=["forum"],
+            tags=[SiteTagsEnum.FORUM.value],
         )
         for item in url_list
     ]
@@ -39,7 +39,7 @@ def make_forum_requests() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule) for site in sites]
 
 
-def make_chainfeeds_request() -> list[RequestSite]:
+def make_news_chainfeeds_request() -> list[RequestSite]:
     url_list = settings.news_cn_urls
     rule = setting_rules.rule_news_chainfeeds
     sites = [
@@ -48,17 +48,17 @@ def make_chainfeeds_request() -> list[RequestSite]:
             jump_base_url=f"https://www.chainfeeds.xyz/feed/detail/",
             original_url=f"{item}/",
             rule_id=rule.id,
-            language="zh",
+            language=SiteLanguageEnum.ZH.value,
             name=Utils.get_name_from_url(item),
             sub_name="发现",
-            tags=["news"],
+            tags=[SiteTagsEnum.NEWS.value],
         )
         for item in url_list
     ]
     return [RequestSite(site=site, rule=rule) for site in sites]
 
 
-def make_marbits_request() -> list[RequestSite]:
+def make_news_marbits_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_marsbit
     original_url = "https://www.marsbit.co/"
     site = Site(
@@ -66,15 +66,15 @@ def make_marbits_request() -> list[RequestSite]:
         jump_base_url="https://news.marsbit.co/{id}.html",
         original_url=original_url,
         rule_id=rule.id,
-        language="zh",
+        language=SiteLanguageEnum.ZH.value,
         name=Utils.get_name_from_url(original_url),
         sub_name="新闻",
-        tags=["news"],
+        tags=[SiteTagsEnum.NEWS.value],
     )
     return [RequestSite(site=site, rule=rule)]
 
 
-def make_bnbchain_blog_request() -> list[RequestSite]:
+def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
     site = Site(
@@ -82,15 +82,15 @@ def make_bnbchain_blog_request() -> list[RequestSite]:
         jump_base_url="https://bnbchain.org/en/blog/",
         original_url=original_url,
         rule_id=rule.id,
-        language="en",
+        language=SiteLanguageEnum.EN.value,
         name=Utils.get_name_from_url(original_url),
         sub_name="blog",
-        tags=["blog"],
+        tags=[SiteTagsEnum.BLOG.value],
     )
     return [RequestSite(site=site, rule=rule)]
 
 
-def make_ethereum_blog_request() -> list[RequestSite]:
+def make_blog_ethereum_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_ethereum
     original_url = "https://blog.ethereum.org/"
     site = Site(
@@ -98,9 +98,9 @@ def make_ethereum_blog_request() -> list[RequestSite]:
         jump_base_url=original_url,
         original_url=original_url,
         rule_id=rule.id,
-        language="en",
+        language=SiteLanguageEnum.EN.value,
         sub_name="blog",
-        tags=["blog"],
+        tags=[SiteTagsEnum.BLOG.value],
     )
     return [RequestSite(site=site, rule=rule)]
 
@@ -165,20 +165,20 @@ class RequestsTestCase(unittest.TestCase):
         logger.debug(f"updates: {next_updates}")
 
     def test_chainfeeds(self):
-        feeds = make_chainfeeds_request()
+        feeds = make_news_chainfeeds_request()
         ForumSpider(request_sites=feeds).start()
         pass
 
     def test_marsbit(self):
-        marsbit = make_marbits_request()
+        marsbit = make_news_marbits_request()
         ForumSpider(request_sites=marsbit).start()
 
     def test_bnbchain_blog(self):
-        bnbchain_blog = make_bnbchain_blog_request()
+        bnbchain_blog = make_blog_bnbchain_request()
         ForumSpider(request_sites=bnbchain_blog).start()
 
     def test_ethereum_blog(self):
-        ethereum = make_ethereum_blog_request()
+        ethereum = make_blog_ethereum_request()
         ForumSpider(request_sites=ethereum).start()
 
 

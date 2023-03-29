@@ -51,6 +51,17 @@ class UrlNode(BaseModel):
     jump_base_url: str = None
 
 
+class SiteLanguageEnum(Enum):
+    EN = "en"
+    ZH = "zh"
+
+
+class SiteTagsEnum(Enum):
+    NEWS = "news"
+    BLOG = "blog"
+    FORUM = "forum"
+
+
 class Site(UpdateItem):
     __update_key__ = ["next_update_time"]
     id: str
