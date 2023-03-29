@@ -111,6 +111,22 @@ def make_news_wutalk_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_panews_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_panews
+    original_url = "https://www.panewslab.com/zh/index.html"
+    site = Site(
+        url=f"https://www.panewslab.com/webapi/index/list?Rn=30&LId=1&LastTime=",
+        jump_base_url="https://www.panewslab.com/zh/articledetails/{id}.html",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="PaNews",
+        sub_name="精选",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -218,6 +234,11 @@ class RequestsTestCase(unittest.TestCase):
     def test_news_wutalk(self):
         setting_sites.update_sites()
         req = make_news_wutalk_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_panews(self):
+        setting_sites.update_sites()
+        req = make_news_panews_request()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

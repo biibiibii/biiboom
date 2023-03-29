@@ -69,6 +69,17 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # https://www.panewslab.com/zh/index.html
+    # https://www.panewslab.com/webapi/index/list?Rn=30&LId=1&LastTime=
+    rule_news_panews = MatchRule(
+        container="data",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="publishTime",
+        extra={"tags": "tags"},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
