@@ -90,6 +90,27 @@ def make_news_odaily_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_wutalk_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_wutalk
+    original_url = "https://www.wu-talk.com/"
+    site = Site(
+        url=f"https://api.wu-talk.com/api/site/getAllArticleList",
+        jump_base_url="",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="吴说",
+        sub_name="",
+        tags=[SiteTagsEnum.NEWS.value],
+        request_method="post",
+        request_data={
+            "pageIndex": "1",
+            "pageSize": "50",
+        },
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -193,6 +214,11 @@ class RequestsTestCase(unittest.TestCase):
         setting_sites.update_sites()
         odaily = make_news_odaily_request()
         ForumSpider(request_sites=odaily).start()
+
+    def test_news_wutalk(self):
+        setting_sites.update_sites()
+        req = make_news_wutalk_request()
+        ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):
         bnbchain_blog = make_blog_bnbchain_request()

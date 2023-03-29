@@ -77,7 +77,7 @@ class Site(UpdateItem):
     original_url: str
 
     request_method: str = "get"
-    request_data: str = None
+    request_data = None
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
@@ -131,9 +131,10 @@ class Node(UpdateItem):
             self.posted_at = datetime.datetime.fromtimestamp(
                 Utils.to_timestamp(self.posted_at)
             ).astimezone(pytz.UTC)
-        self.posted_at = datetime.datetime.fromisoformat(self.posted_at).astimezone(
-            pytz.UTC
-        )
+        elif isinstance(self.posted_at, str):
+            self.posted_at = datetime.datetime.fromisoformat(self.posted_at).astimezone(
+                pytz.UTC
+            )
         logger.debug(f"pre to db: {self.to_dict}")
 
 

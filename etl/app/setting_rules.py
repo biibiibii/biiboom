@@ -58,6 +58,17 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # https://www.wu-talk.com/
+    # https://api.wu-talk.com/api/site/getAllArticleList
+    rule_news_wutalk = MatchRule(
+        container="data",
+        title="title",
+        url="url",
+        rule_type=RuleType.json.value,
+        posted_at="inputtime",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
