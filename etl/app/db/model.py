@@ -5,6 +5,7 @@
 """
 import time
 import unittest
+from enum import Enum
 
 from peewee import Model, CharField, IntegerField, ForeignKeyField
 from playhouse.postgres_ext import PostgresqlExtDatabase, JSONField
@@ -42,6 +43,12 @@ class MatchRuleModel(BaseExtModel):
         table_name = "match_rule"
 
 
+class SiteStatusEnum(Enum):
+    DISABLE = 0
+    ABLE = 1
+    DRAFT = 2
+
+
 class SiteModel(BaseExtModel):
     id: str = CharField()
     url: str = CharField()
@@ -57,6 +64,8 @@ class SiteModel(BaseExtModel):
 
     rule: MatchRuleModel = ForeignKeyField(MatchRuleModel)
 
+    status: str = IntegerField(default=SiteStatusEnum.ABLE.value)
+
     class Meta:
         database = pgsql_db
         table_name = "site"
@@ -66,7 +75,10 @@ class SiteModel(BaseExtModel):
         return (
             cls.select()
             .join(MatchRuleModel, on=(cls.rule_id == MatchRuleModel.id))
-            .where(cls.next_update_time <= int(time.time()))
+            .where(
+                cls.next_update_time <= int(time.time()),
+                cls.status == SiteStatusEnum.ABLE.value,
+            )
             .limit(settings.page_size)
         )
 
