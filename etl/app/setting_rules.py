@@ -24,7 +24,7 @@ class SettingRules(BaseSettings):
     )
 
     # https://www.chainfeeds.xyz/
-    rule_chainfeeds = MatchRule(
+    rule_news_chainfeeds = MatchRule(
         container="data.list",
         title="title",
         url="uuid",
@@ -38,7 +38,7 @@ class SettingRules(BaseSettings):
 
     # https://www.marsbit.co/
     # https://api.marsbit.co/info/news/showinfo
-    rule_marsbit = MatchRule(
+    rule_news_marsbit = MatchRule(
         container="obj.inforList",
         title="title",
         url="id",
@@ -50,7 +50,7 @@ class SettingRules(BaseSettings):
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
-    rule_bnbchain_blog = MatchRule(
+    rule_blog_bnbchain = MatchRule(
         container="result.data.en.edges",
         title="node.title",
         url="node.slug",
@@ -61,7 +61,7 @@ class SettingRules(BaseSettings):
 
     # https://blog.ethereum.org/
     # https://blog.ethereum.org/_next/data/4tYBiKFBGW9-G-BSIr4zA/en.json
-    rule_ethereum_blog = MatchRule(
+    rule_blog_ethereum = MatchRule(
         container="pageProps.allPostsData",
         title="frontmatter.title",
         url="url",

@@ -41,7 +41,7 @@ def make_forum_requests() -> list[RequestSite]:
 
 def make_chainfeeds_request() -> list[RequestSite]:
     url_list = settings.news_cn_urls
-    rule = setting_rules.rule_chainfeeds
+    rule = setting_rules.rule_news_chainfeeds
     sites = [
         Site(
             url=f"https://api.chainfeeds.xyz/feed/list?page=1&page_size=20&group_alias=selected",
@@ -59,7 +59,7 @@ def make_chainfeeds_request() -> list[RequestSite]:
 
 
 def make_marbits_request() -> list[RequestSite]:
-    rule = setting_rules.rule_marsbit
+    rule = setting_rules.rule_news_marsbit
     original_url = "https://www.marsbit.co/"
     site = Site(
         url=f"https://api.marsbit.co/info/news/shownews",
@@ -75,7 +75,7 @@ def make_marbits_request() -> list[RequestSite]:
 
 
 def make_bnbchain_blog_request() -> list[RequestSite]:
-    rule = setting_rules.rule_bnbchain_blog
+    rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
     site = Site(
         url=f"https://bnbchain.org/en/blog/page-data/index/page-data.json",
@@ -91,7 +91,7 @@ def make_bnbchain_blog_request() -> list[RequestSite]:
 
 
 def make_ethereum_blog_request() -> list[RequestSite]:
-    rule = setting_rules.rule_ethereum_blog
+    rule = setting_rules.rule_blog_ethereum
     original_url = "https://blog.ethereum.org/"
     site = Site(
         url=f"https://blog.ethereum.org/_next/data/B4tauPzc7B80ozj3si_al/en.json",
