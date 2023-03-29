@@ -1,6 +1,7 @@
 export default {
-  'menu.forum': 'Forum',
   'menu.news': 'News',
+  'menu.blog': 'Blog',
+  'menu.forum': 'Forum',
   'menu.home': 'Home',
   'menu.home.index': 'Home',
 
