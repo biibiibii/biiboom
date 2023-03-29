@@ -94,7 +94,7 @@ def make_ethereum_blog_request() -> list[RequestSite]:
     rule = setting_rules.rule_ethereum_blog
     original_url = "https://blog.ethereum.org/"
     site = Site(
-        url=f"https://blog.ethereum.org/_next/data/4tYBiKFBGW9-G-BSIr4zA/en.json",
+        url=f"https://blog.ethereum.org/_next/data/B4tauPzc7B80ozj3si_al/en.json",
         jump_base_url=original_url,
         original_url=original_url,
         rule_id=rule.id,
