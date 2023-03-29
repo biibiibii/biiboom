@@ -94,6 +94,10 @@ class Site(UpdateItem):
     def update_next_time(self):
         self.next_update_time = int(time.time()) + self.update_rate
 
+    def pre_to_db(self):
+        # todo update next time
+        pass
+
 
 class RequestSite(BaseModel):
     site: Site
@@ -127,6 +131,9 @@ class Node(UpdateItem):
             self.posted_at = datetime.datetime.fromtimestamp(
                 Utils.to_timestamp(self.posted_at)
             ).astimezone(pytz.UTC)
+        self.posted_at = datetime.datetime.fromisoformat(self.posted_at).astimezone(
+            pytz.UTC
+        )
         logger.debug(f"pre to db: {self.to_dict}")
 
 
