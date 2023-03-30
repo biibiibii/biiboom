@@ -5,8 +5,10 @@ from enum import Enum
 from typing import Any
 
 from feapder import Item, UpdateItem
+from playhouse.shortcuts import model_to_dict
 from pydantic import BaseModel
 
+from db.model import SiteModel
 from settings import settings, logger
 from utils import Utils
 
@@ -94,8 +96,25 @@ class Site(UpdateItem):
         self.next_update_time = int(time.time()) + self.update_rate
 
     def pre_to_db(self):
-        # todo update next time
         pass
+
+    @classmethod
+    def get_or_create(cls, **kwargs) -> "Site":
+        if "url" not in kwargs:
+            raise Exception("url is None")
+        site_id = Utils.unique_hash(kwargs["url"])
+        site_model = SiteModel.get_by_id(site_id)
+        if not site_model:
+            logger.debug(f"site is None: {site_model}")
+            return cls(**kwargs)
+        else:
+            model_dict = model_to_dict(
+                site_model, recurse=False, extra_attrs=["rule_id"]
+            )
+            if "rule" in model_dict:
+                del model_dict["rule"]
+
+            return cls(**model_dict)
 
 
 class RequestSite(BaseModel):
