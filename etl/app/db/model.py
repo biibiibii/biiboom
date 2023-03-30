@@ -61,10 +61,11 @@ class SiteModel(BaseExtModel):
     tags: list[str] = JSONField()
     update_rate: int = IntegerField()
     original_url: str = CharField()
+    status: str = IntegerField(default=SiteStatusEnum.ABLE.value)
+    request_method: str = "get"
+    request_data = None
 
     rule: MatchRuleModel = ForeignKeyField(MatchRuleModel)
-
-    status: str = IntegerField(default=SiteStatusEnum.ABLE.value)
 
     class Meta:
         database = pgsql_db
