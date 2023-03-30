@@ -4,10 +4,11 @@ import unittest
 from enum import Enum
 from typing import Any
 
-import pytz
 from feapder import Item, UpdateItem
+from playhouse.shortcuts import model_to_dict
 from pydantic import BaseModel
 
+from db.model import SiteModel, SiteStatusEnum
 from settings import settings, logger
 from utils import Utils
 
@@ -51,6 +52,17 @@ class UrlNode(BaseModel):
     jump_base_url: str = None
 
 
+class SiteLanguageEnum(Enum):
+    EN = "en"
+    ZH = "zh"
+
+
+class SiteTagsEnum(Enum):
+    NEWS = "news"
+    BLOG = "blog"
+    FORUM = "forum"
+
+
 class Site(UpdateItem):
     __update_key__ = ["next_update_time"]
     id: str
@@ -64,9 +76,10 @@ class Site(UpdateItem):
     update_rate: int
     next_update_time: int
     original_url: str
+    status: str = SiteStatusEnum.ABLE.value
 
     request_method: str = "get"
-    request_data: str = None
+    request_data = None
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
@@ -82,6 +95,27 @@ class Site(UpdateItem):
 
     def update_next_time(self):
         self.next_update_time = int(time.time()) + self.update_rate
+
+    def pre_to_db(self):
+        pass
+
+    @classmethod
+    def get_or_create(cls, **kwargs) -> "Site":
+        if "url" not in kwargs:
+            raise Exception("url is None")
+        site_id = Utils.unique_hash(kwargs["url"])
+        site_model = SiteModel.get_or_none(SiteModel.id == site_id)
+        if not site_model:
+            logger.debug(f"site is None: {site_model}")
+            return cls(**kwargs)
+        else:
+            model_dict = model_to_dict(
+                site_model, recurse=False, extra_attrs=["rule_id"]
+            )
+            if "rule" in model_dict:
+                del model_dict["rule"]
+
+            return cls(**model_dict)
 
 
 class RequestSite(BaseModel):
@@ -112,10 +146,8 @@ class Node(UpdateItem):
 
     def pre_to_db(self):
         logger.debug(f"pre to db: {self.to_dict}")
-        if isinstance(self.posted_at, int):
-            self.posted_at = datetime.datetime.fromtimestamp(
-                Utils.to_timestamp(self.posted_at)
-            ).astimezone(pytz.UTC)
+        self.posted_at = Utils.to_utc_datetime(self.posted_at)
+
         logger.debug(f"pre to db: {self.to_dict}")
 
 
@@ -127,6 +159,12 @@ class NodeTestCase(unittest.TestCase):
     def test_request_node(self):
         print(int(time.time()))
         pass
+
+    def test_model_get(self):
+        site_id = "bb246159cfc93001c0563ee62fd880d072e8a560c84585f1c60262d744aaeba5"
+        # site_id = "bb246159cfc93001c0563ee62fd880d072e8a560c84585f1c60262d744aaeba"
+        resp = SiteModel.get_or_none(SiteModel.id == site_id)
+        logger.debug(f"resp: {resp}")
 
 
 if __name__ == "__main__":

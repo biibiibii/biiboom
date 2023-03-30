@@ -1,8 +1,16 @@
+from __future__ import annotations
+
+import datetime
+import re
 import time
 import unittest
 from hashlib import sha256
 from typing import Any
 from urllib.parse import urlparse
+
+import pytz
+
+from settings import logger
 
 
 class Utils:
@@ -41,6 +49,32 @@ class Utils:
         if ts > (int(time.time()) * 10):
             return int(ts / 1000)
         return ts
+
+    @classmethod
+    def is_iso_datetime(cls, dt: str) -> bool:
+        iso_pattern = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$"
+        return re.match(iso_pattern, dt) is not None
+
+    @classmethod
+    def is_utc_datetime(cls, dt: str) -> bool:
+        utc_pattern = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$"
+        return re.match(utc_pattern, dt) is not None
+
+    @classmethod
+    def to_utc_datetime(cls, dt: int | str) -> datetime:
+        if isinstance(dt, int):
+            dt = datetime.datetime.fromtimestamp(cls.to_timestamp(dt)).astimezone(
+                pytz.UTC
+            )
+        elif isinstance(dt, str):
+            dt = dt.strip()
+            if cls.is_iso_datetime(dt):
+                dt = datetime.datetime.fromisoformat(dt).astimezone(pytz.UTC)
+            elif cls.is_utc_datetime(dt):
+                dt = datetime.datetime.fromisoformat(dt.replace("Z", "")).astimezone(
+                    pytz.UTC
+                )
+        return dt
 
 
 class UtilsTestCase(unittest.TestCase):
@@ -115,6 +149,25 @@ class UtilsTestCase(unittest.TestCase):
         self.assertEqual(Utils.to_timestamp(1679734466000), 1679734466)
         self.assertEqual(Utils.to_timestamp(167973446600), 167973446)
         self.assertEqual(Utils.to_timestamp(16797344660), 16797344660)
+
+    def test_to_utc_datetime(self):
+        logger.debug(f"datatime: {Utils.to_utc_datetime(1679734466000)}")
+        self.assertEqual(
+            Utils.to_utc_datetime(1679734466000),
+            datetime.datetime.fromisoformat("2023-03-25 08:54:26+00:00"),
+        )
+        self.assertEqual(
+            Utils.to_utc_datetime(167973446600),
+            datetime.datetime.fromisoformat("1975-04-29 03:17:26+00:00"),
+        )
+        self.assertEqual(
+            Utils.to_utc_datetime("2021-08-11T10:30:00Z"),
+            datetime.datetime.fromisoformat("2021-08-11T10:30:00").astimezone(pytz.UTC),
+        )
+        self.assertEqual(
+            Utils.to_utc_datetime("2021-08-11T10:30:00"),
+            datetime.datetime.fromisoformat("2021-08-11T10:30:00").astimezone(pytz.UTC),
+        )
 
 
 if __name__ == "__main__":
