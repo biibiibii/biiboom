@@ -150,7 +150,13 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_update_rules(self):
         setting_rules.update_rules()
-        pass
+
+    def test_marbits_rule(self):
+        rule = setting_rules.rule_news_marsbit
+        logger.debug(f"rule: {rule}")
+        self.assertEqual(
+            rule.id, "ecca8b8e9e060bde8910fd12a05bb444a55f338788d68f2c8e00e1fb03070a54"
+        )
 
 
 if __name__ == "__main__":

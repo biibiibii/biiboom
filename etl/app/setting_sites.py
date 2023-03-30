@@ -21,7 +21,7 @@ __all__ = ["setting_sites"]
 
 def build_forum_request(url: str) -> RequestSite:
     rule = setting_rules.rule_forum
-    site = Site(
+    site = Site.get_or_create(
         url=f"{url}/latest.json?no_definitions=true&page=0",
         jump_base_url=f"{url}/t/",
         original_url=f"{url}/latest/",
@@ -43,7 +43,7 @@ def make_news_chainfeeds_request() -> list[RequestSite]:
     url_list = settings.news_cn_urls
     rule = setting_rules.rule_news_chainfeeds
     sites = [
-        Site(
+        Site.get_or_create(
             url=f"https://api.chainfeeds.xyz/feed/list?page=1&page_size=20&group_alias=selected",
             jump_base_url=f"https://www.chainfeeds.xyz/feed/detail/",
             original_url=f"{item}/",
@@ -61,7 +61,8 @@ def make_news_chainfeeds_request() -> list[RequestSite]:
 def make_news_marbits_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_marsbit
     original_url = "https://www.marsbit.co/"
-    site = Site(
+    logger.debug(f"marbits rule: {rule}")
+    site = Site.get_or_create(
         url=f"https://api.marsbit.co/info/news/shownews",
         jump_base_url="https://news.marsbit.co/{id}.html",
         original_url=original_url,
@@ -77,7 +78,7 @@ def make_news_marbits_request() -> list[RequestSite]:
 def make_news_odaily_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_odaily
     original_url = "https://www.odaily.news/"
-    site = Site(
+    site = Site.get_or_create(
         url=f"https://www.odaily.news/api/pp/api/app-front/feed-stream?feed_id=280&b_id=&per_page=50",
         jump_base_url="https://www.odaily.news/post/",
         original_url=original_url,
@@ -93,7 +94,7 @@ def make_news_odaily_request() -> list[RequestSite]:
 def make_news_wutalk_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_wutalk
     original_url = "https://www.wu-talk.com/"
-    site = Site(
+    site = Site.get_or_create(
         url=f"https://api.wu-talk.com/api/site/getAllArticleList",
         jump_base_url="",
         original_url=original_url,
@@ -114,7 +115,7 @@ def make_news_wutalk_request() -> list[RequestSite]:
 def make_news_panews_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_panews
     original_url = "https://www.panewslab.com/zh/index.html"
-    site = Site(
+    site = Site.get_or_create(
         url=f"https://www.panewslab.com/webapi/index/list?Rn=30&LId=1&LastTime=",
         jump_base_url="https://www.panewslab.com/zh/articledetails/{id}.html",
         original_url=original_url,
@@ -130,7 +131,7 @@ def make_news_panews_request() -> list[RequestSite]:
 def make_news_jinse_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_jinse
     original_url = "https://www.jinse.com/"
-    site = Site(
+    site = Site.get_or_create(
         url=f"https://api.jinse.cn/noah/v3/timelines?catelogue_key=www&limit=50&information_id=&flag=down",
         jump_base_url="",
         original_url=original_url,
@@ -146,7 +147,7 @@ def make_news_jinse_request() -> list[RequestSite]:
 def make_news_8btc_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_8btc
     original_url = "https://www.8btc.com/"
-    site = Site(
+    site = Site.get_or_create(
         url=f"https://www.8btc.com/sitemap",
         jump_base_url="https://www.8btc.com/",
         original_url=original_url,
@@ -162,7 +163,7 @@ def make_news_8btc_request() -> list[RequestSite]:
 def make_news_chaincatcher_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_chaincatcher
     original_url = "https://www.chaincatcher.com/"
-    site = Site(
+    site = Site.get_or_create(
         url=f"https://www.chaincatcher.com/api/article/lists",
         jump_base_url="https://www.chaincatcher.com/article/",
         original_url=original_url,
@@ -183,7 +184,7 @@ def make_news_chaincatcher_request() -> list[RequestSite]:
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
-    site = Site(
+    site = Site.get_or_create(
         url=f"https://bnbchain.org/en/blog/page-data/index/page-data.json",
         jump_base_url="https://bnbchain.org/en/blog/",
         original_url=original_url,
@@ -199,7 +200,7 @@ def make_blog_bnbchain_request() -> list[RequestSite]:
 def make_blog_ethereum_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_ethereum
     original_url = "https://blog.ethereum.org/"
-    site = Site(
+    site = Site.get_or_create(
         url=f"https://blog.ethereum.org/_next/data/B4tauPzc7B80ozj3si_al/en.json",
         jump_base_url=original_url,
         original_url=original_url,
@@ -255,6 +256,14 @@ class SettingSites(BaseSettings):
 
 
 setting_sites = SettingSites()
+
+
+class SiteModelTestCase(unittest.TestCase):
+    def test_site_model(self):
+        # setting_sites.update_sites()
+        req = make_news_marbits_request()
+        logger.debug(f"site_model: {req}")
+        pass
 
 
 class RequestsTestCase(unittest.TestCase):
