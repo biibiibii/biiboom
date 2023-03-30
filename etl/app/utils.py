@@ -52,7 +52,9 @@ class Utils:
 
     @classmethod
     def is_iso_datetime(cls, dt: str) -> bool:
-        iso_pattern = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$"
+        # 2021-08-11T10:30:00
+        # 2021-08-11 10:30:00
+        iso_pattern = r"^(?!.*Z)\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}$"
         return re.match(iso_pattern, dt) is not None
 
     @classmethod
@@ -167,6 +169,10 @@ class UtilsTestCase(unittest.TestCase):
         self.assertEqual(
             Utils.to_utc_datetime("2021-08-11T10:30:00"),
             datetime.datetime.fromisoformat("2021-08-11T10:30:00").astimezone(pytz.UTC),
+        )
+        self.assertEqual(
+            Utils.to_utc_datetime("2023-03-30 09:45:49"),
+            datetime.datetime.fromisoformat("2023-03-30 09:45:49").astimezone(pytz.UTC),
         )
 
 
