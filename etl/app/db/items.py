@@ -8,7 +8,7 @@ from feapder import Item, UpdateItem
 from playhouse.shortcuts import model_to_dict
 from pydantic import BaseModel
 
-from db.model import SiteModel
+from db.model import SiteModel, SiteStatusEnum
 from settings import settings, logger
 from utils import Utils
 
@@ -76,6 +76,7 @@ class Site(UpdateItem):
     update_rate: int
     next_update_time: int
     original_url: str
+    status: str = SiteStatusEnum.ABLE.value
 
     request_method: str = "get"
     request_data = None
