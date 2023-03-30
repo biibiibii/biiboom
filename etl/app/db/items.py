@@ -4,7 +4,6 @@ import unittest
 from enum import Enum
 from typing import Any
 
-import pytz
 from feapder import Item, UpdateItem
 from pydantic import BaseModel
 
@@ -127,15 +126,8 @@ class Node(UpdateItem):
 
     def pre_to_db(self):
         logger.debug(f"pre to db: {self.to_dict}")
-        if isinstance(self.posted_at, int):
-            self.posted_at = datetime.datetime.fromtimestamp(
-                Utils.to_timestamp(self.posted_at)
-            ).astimezone(pytz.UTC)
-        elif isinstance(self.posted_at, str):
-            self.posted_at = self.posted_at.strip()
-            self.posted_at = datetime.datetime.fromisoformat(self.posted_at).astimezone(
-                pytz.UTC
-            )
+        self.posted_at = Utils.to_utc_datetime(self.posted_at)
+
         logger.debug(f"pre to db: {self.to_dict}")
 
 

@@ -19,24 +19,24 @@ from utils import Utils
 __all__ = ["setting_sites"]
 
 
+def build_forum_request(url: str) -> RequestSite:
+    rule = setting_rules.rule_forum
+    site = Site(
+        url=f"{url}/latest.json?no_definitions=true&page=0",
+        jump_base_url=f"{url}/t/",
+        original_url=f"{url}/latest/",
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name=Utils.get_name_from_url(url),
+        sub_name="Forum",
+        tags=[SiteTagsEnum.FORUM.value],
+    )
+    return RequestSite(site=site, rule=rule)
+
+
 def make_forum_requests() -> list[RequestSite]:
     url_list = settings.forum_urls
-    rule = setting_rules.rule_forum
-    sites = [
-        Site(
-            url=f"{item}/latest.json?no_definitions=true&page=0",
-            jump_base_url=f"{item}/t/",
-            original_url=f"{item}/latest/",
-            rule_id=rule.id,
-            language=SiteLanguageEnum.EN.value,
-            name=Utils.get_name_from_url(item),
-            sub_name="Forum",
-            tags=[SiteTagsEnum.FORUM.value],
-        )
-        for item in url_list
-    ]
-
-    return [RequestSite(site=site, rule=rule) for site in sites]
+    return [build_forum_request(item) for item in url_list]
 
 
 def make_news_chainfeeds_request() -> list[RequestSite]:
@@ -272,6 +272,10 @@ class RequestsTestCase(unittest.TestCase):
     def test_get_next_updates(self):
         next_updates = setting_sites.get_next_updates()
         logger.debug(f"updates: {next_updates}")
+
+    def test_forum_near(self):
+        req = build_forum_request("https://gov.near.org")
+        ForumSpider(request_sites=[req]).start()
 
     def test_chainfeeds(self):
         feeds = make_news_chainfeeds_request()
