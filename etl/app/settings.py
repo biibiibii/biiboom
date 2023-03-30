@@ -21,7 +21,7 @@ class Settings(BaseSettings):
 
     site_update_rate = 3600
 
-    page_size = 50
+    page_size = 5
 
     # schedule job time: second
     scheduler_trigger = 120
