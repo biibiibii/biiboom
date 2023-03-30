@@ -103,7 +103,7 @@ class Site(UpdateItem):
         if "url" not in kwargs:
             raise Exception("url is None")
         site_id = Utils.unique_hash(kwargs["url"])
-        site_model = SiteModel.get_by_id(site_id)
+        site_model = SiteModel.get_or_none(SiteModel.id == site_id)
         if not site_model:
             logger.debug(f"site is None: {site_model}")
             return cls(**kwargs)
@@ -158,6 +158,12 @@ class NodeTestCase(unittest.TestCase):
     def test_request_node(self):
         print(int(time.time()))
         pass
+
+    def test_model_get(self):
+        site_id = "bb246159cfc93001c0563ee62fd880d072e8a560c84585f1c60262d744aaeba5"
+        # site_id = "bb246159cfc93001c0563ee62fd880d072e8a560c84585f1c60262d744aaeba"
+        resp = SiteModel.get_or_none(SiteModel.id == site_id)
+        logger.debug(f"resp: {resp}")
 
 
 if __name__ == "__main__":
