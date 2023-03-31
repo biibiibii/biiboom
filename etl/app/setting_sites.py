@@ -61,7 +61,6 @@ def make_news_chainfeeds_request() -> list[RequestSite]:
 def make_news_marbits_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_marsbit
     original_url = "https://www.marsbit.co/"
-    logger.debug(f"marbits rule: {rule}")
     site = Site.get_or_create(
         url=f"https://api.marsbit.co/info/news/shownews",
         jump_base_url="https://news.marsbit.co/{id}.html",
@@ -181,6 +180,42 @@ def make_news_chaincatcher_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_blockbeats() -> list[RequestSite]:
+    rule = setting_rules.rule_news_blockbeats
+    setting_rules.update_rule(rule)
+
+    original_url = "https://www.theblockbeats.info/article"
+    site = Site.get_or_create(
+        url=f"https://api.theblockbeats.info/v3/Information/newsall?page=1",
+        jump_base_url="https://www.theblockbeats.info/news/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="律动",
+        sub_name="文章",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_news_blockbeats_flash() -> list[RequestSite]:
+    rule = setting_rules.rule_news_blockbeats_flash
+    setting_rules.update_rule(rule)
+
+    original_url = "https://www.theblockbeats.info/newsflash"
+    site = Site.get_or_create(
+        url=f"https://api.theblockbeats.info/v3/newsflash/select?page=1",
+        jump_base_url="https://www.theblockbeats.info/flash/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="律动",
+        sub_name="快讯",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -238,8 +273,12 @@ class SettingSites(BaseSettings):
     @classmethod
     def get_next_updates(cls) -> list[RequestSite]:
         update_sites = SiteModel.select_next_updates()
+        return cls.to_request_sites(update_sites)
+
+    @classmethod
+    def to_request_sites(cls, site_models: list[SiteModel]) -> list[RequestSite]:
         __site_list = []
-        for item in update_sites:
+        for item in site_models:
             item.rule_id = item.rule.id
             item_dict = model_to_dict(item, backrefs=False)
             if "rule" in item_dict:
@@ -251,7 +290,6 @@ class SettingSites(BaseSettings):
                     rule=MatchRule(**model_to_dict(item.rule)),
                 )
             )
-
         return __site_list
 
 
@@ -268,7 +306,8 @@ class SiteModelTestCase(unittest.TestCase):
 
 class RequestsTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        setting_sites.update_sites()
+        # setting_sites.update_sites()
+        pass
 
     def test_update_sites(self):
         setting_sites.update_sites()
@@ -303,6 +342,15 @@ class RequestsTestCase(unittest.TestCase):
         req = make_news_wutalk_request()
         ForumSpider(request_sites=req).start()
 
+    def test_news_wutalk_1(self):
+        site_id = "bb246159cfc93001c0563ee62fd880d072e8a560c84585f1c60262d744aaeba5"
+        site_model = SiteModel.get_by_id(site_id)
+        site_dict = model_to_dict(site_model)
+        logger.debug(f"site dict: {site_dict}")
+        reqs = setting_sites.to_request_sites([site_model])
+        logger.debug(f"request sites: {reqs}")
+        ForumSpider(request_sites=reqs).start()
+
     def test_news_panews(self):
         req = make_news_panews_request()
         ForumSpider(request_sites=req).start()
@@ -317,6 +365,14 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_news_chaincatcher(self):
         req = make_news_chaincatcher_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_blockbeats(self):
+        req = make_news_blockbeats()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_blockbeats_flash(self):
+        req = make_news_blockbeats_flash()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

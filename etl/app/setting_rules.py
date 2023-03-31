@@ -108,6 +108,26 @@ class SettingRules(BaseSettings):
         posted_at="add_time",
         extra={},
     )
+    # https://www.theblockbeats.info/article
+    # https://api.theblockbeats.info/v3/Information/newsall?page=1
+    rule_news_blockbeats = MatchRule(
+        container="data",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="add_time",
+        extra={"tags": "topic_title"},
+    )
+    # https://www.theblockbeats.info/newsflash
+    # https://api.theblockbeats.info/v3/newsflash/select?page=1
+    rule_news_blockbeats_flash = MatchRule(
+        container="data.data",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="add_time",
+        extra={},
+    )
 
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
@@ -138,6 +158,10 @@ class SettingRules(BaseSettings):
         _rules = [self.dict().get(item) for item in self.dict()]
         logger.debug(f"all rules: {_rules}")
         item_client.put_items(_rules)
+        item_client.save()
+
+    def update_rule(self, rule: MatchRule):
+        item_client.put_item(rule)
         item_client.save()
 
 
