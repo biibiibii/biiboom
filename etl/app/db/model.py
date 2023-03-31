@@ -62,8 +62,8 @@ class SiteModel(BaseExtModel):
     update_rate: int = IntegerField()
     original_url: str = CharField()
     status: str = IntegerField(default=SiteStatusEnum.ABLE.value)
-    request_method: str = "get"
-    request_data = None
+    request_method: str = CharField(default="get")
+    request_data = JSONField(default=None)
 
     rule: MatchRuleModel = ForeignKeyField(MatchRuleModel)
 
