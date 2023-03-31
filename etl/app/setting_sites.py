@@ -220,7 +220,7 @@ def make_news_blockbeats() -> list[RequestSite]:
 
 def make_news_blockbeats_flash() -> list[RequestSite]:
     rule = setting_rules.rule_news_blockbeats_flash
-    setting_rules.update_rule(rule)
+    item_client.save_item(rule)
 
     original_url = "https://www.theblockbeats.info/newsflash"
     site = Site.get_or_create(
@@ -233,6 +233,7 @@ def make_news_blockbeats_flash() -> list[RequestSite]:
         sub_name="快讯",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
@@ -261,6 +262,44 @@ def make_news_tokeningisht_request() -> list[RequestSite]:
     )
     item_client.save_item(site)
 
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_binance_news() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_binance_news
+    item_client.save_item(rule)
+
+    original_url = "https://www.binance.com/en/support/announcement/latest-binance-news?c=49&navId=49"
+    site = Site.get_or_create(
+        url=f"https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageSize=20&pageNo=1",
+        jump_base_url="https://www.binance.com/en/support/announcement/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="Binance",
+        sub_name="Latest News",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_binance_token_listing() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_binance_tokenlisting
+    item_client.save_item(rule)
+
+    original_url = "https://www.binance.com/en/support/announcement/new-cryptocurrency-listing?c=48&navId=48"
+    site = Site.get_or_create(
+        url=f"https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageSize=21&pageNo=1",
+        jump_base_url="https://www.binance.com/en/support/announcement/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="Binance",
+        sub_name="Token Listing",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
@@ -296,9 +335,9 @@ def make_blog_ethereum_request() -> list[RequestSite]:
 
 
 _request_list = [
-    globals()[func]()
-    for func in dir()
-    if callable(eval(func)) and func.startswith("make_")
+    # globals()[func]()
+    # for func in dir()
+    # if callable(eval(func)) and func.startswith("make_")
 ]
 
 
@@ -433,6 +472,14 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_news_tokeninsight(self):
         req = make_news_tokeningisht_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_binance_news(self):
+        req = make_cex_binance_news()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_binance_token_listing(self):
+        req = make_cex_binance_token_listing()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

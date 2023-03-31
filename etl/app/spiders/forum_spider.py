@@ -98,7 +98,7 @@ class ForumSpider(feapder.AirSpider):
             )
 
     def parse(self, request, response):
-        logger.debug(f"response: {response.text}")
+        # logger.debug(f"response: {response.text}")
         rule = request.request_site.rule
         site = request.request_site.site
 
