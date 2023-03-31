@@ -118,6 +118,16 @@ class SettingRules(BaseSettings):
         posted_at="add_time",
         extra={"tags": "topic_title"},
     )
+    # https://www.theblockbeats.info/newsflash
+    # https://api.theblockbeats.info/v3/newsflash/select?page=1
+    rule_news_blockbeats_flash = MatchRule(
+        container="data.data",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="add_time",
+        extra={},
+    )
 
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
