@@ -12,9 +12,6 @@ query GetSiteNodes {
   site(limit: 30, where: {${filter}}, order_by: {name: desc}) {
     name
     sub_name
-    url
-    rule_id
-    jump_base_url
     original_url
     id
     nodes(limit: 30, order_by: {posted_at: desc}) {
