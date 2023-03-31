@@ -1,6 +1,7 @@
 export default {
   'menu.news': '新闻',
   'menu.blog': '博客',
+  'menu.cex': '交易所',
   'menu.forum': '论坛',
   'menu.home': '首页',
 
