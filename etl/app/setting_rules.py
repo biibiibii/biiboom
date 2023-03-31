@@ -129,6 +129,33 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    rule_news_tokeninsight = MatchRule(
+        container="data.list",
+        title="title",
+        url="articleLink",
+        rule_type=RuleType.json.value,
+        posted_at="onlineTime",
+        extra={},
+    )
+
+    rule_cex_binance_news = MatchRule(
+        container="data.catalogs.1.articles",
+        title="title",
+        url="code",
+        rule_type=RuleType.json.value,
+        posted_at="releaseDate",
+        extra={},
+    )
+
+    rule_cex_binance_tokenlisting = MatchRule(
+        container="data.catalogs.0.articles",
+        title="title",
+        url="code",
+        rule_type=RuleType.json.value,
+        posted_at="releaseDate",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json

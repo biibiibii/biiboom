@@ -92,12 +92,13 @@ class ForumSpider(feapder.AirSpider):
             yield feapder.Request(
                 item.site.url,
                 method=item.site.request_method,
-                data=item.site.request_data,
+                # data=item.site.request_data,
+                json=item.site.request_data,
                 request_site=item,
             )
 
     def parse(self, request, response):
-        logger.debug(f"response: {response.text}")
+        # logger.debug(f"response: {response.text}")
         rule = request.request_site.rule
         site = request.request_site.site
 

@@ -61,6 +61,7 @@ class SiteLanguageEnum(Enum):
 
 class SiteTagsEnum(Enum):
     NEWS = "news"
+    CEX = "cex"
     BLOG = "blog"
     FORUM = "forum"
 
@@ -69,7 +70,7 @@ class Site(UpdateItem):
     __update_key__ = ["next_update_time"]
     id: str
     url: str
-    jump_base_url: str = None
+    jump_base_url: str = ""
     rule_id: str
     language: str
     name: str
@@ -114,6 +115,7 @@ class Site(UpdateItem):
             model_dict = model_to_dict(
                 site_model, recurse=False, extra_attrs=["rule_id"]
             )
+            # todo update
             if "rule" in model_dict:
                 del model_dict["rule"]
 

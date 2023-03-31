@@ -40,11 +40,17 @@ export default defineConfig({
       component: './sites',
     },
     {
-      path: '/tag/blog',
-      name: 'blog',
+      path: '/tag/cex',
+      name: 'cex',
       icon: 'FileSync',
       component: './sites',
     },
+    // {
+    //   path: '/tag/blog',
+    //   name: 'blog',
+    //   icon: 'FileSync',
+    //   component: './sites',
+    // },
     {
       path: '/tag/forum',
       name: 'forum',

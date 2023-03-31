@@ -145,10 +145,11 @@ def make_news_jinse_request() -> list[RequestSite]:
 
 def make_news_8btc_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_8btc
+    setting_rules.update_rule(rule)
     original_url = "https://www.8btc.com/"
     site = Site.get_or_create(
         url=f"https://www.8btc.com/sitemap",
-        jump_base_url="https://www.8btc.com/",
+        jump_base_url=original_url,
         original_url=original_url,
         rule_id=rule.id,
         language=SiteLanguageEnum.ZH.value,
@@ -156,6 +157,25 @@ def make_news_8btc_request() -> list[RequestSite]:
         sub_name="资讯",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_news_defidao_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_8btc
+    item_client.save_item(rule)
+    original_url = "https://www.defidaonews.com/"
+    site = Site.get_or_create(
+        url=f"https://www.defidaonews.com/sitemap",
+        jump_base_url=original_url,
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="DeFi之道",
+        sub_name="资讯",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    item_client.save_item(site)
+
     return [RequestSite(site=site, rule=rule)]
 
 
@@ -200,7 +220,7 @@ def make_news_blockbeats() -> list[RequestSite]:
 
 def make_news_blockbeats_flash() -> list[RequestSite]:
     rule = setting_rules.rule_news_blockbeats_flash
-    setting_rules.update_rule(rule)
+    item_client.save_item(rule)
 
     original_url = "https://www.theblockbeats.info/newsflash"
     site = Site.get_or_create(
@@ -213,6 +233,73 @@ def make_news_blockbeats_flash() -> list[RequestSite]:
         sub_name="快讯",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_news_tokeningisht_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_tokeninsight
+    item_client.save_item(rule)
+
+    original_url = "https://tokeninsight.com/zh/research"
+    site = Site.get_or_create(
+        url=f"https://tokeninsight.com/apiv2/research/articleList",
+        jump_base_url="https://tokeninsight.com/zh/research/daily-digest/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="TokenInsight",
+        sub_name="研究",
+        tags=[SiteTagsEnum.NEWS.value],
+        request_method="post",
+        request_data={
+            "current": 1,
+            "language": "cn",
+            "pageSize": 15,
+            "tagId": "",
+            "type": 0,
+        },
+    )
+    item_client.save_item(site)
+
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_binance_news() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_binance_news
+    item_client.save_item(rule)
+
+    original_url = "https://www.binance.com/en/support/announcement/latest-binance-news?c=49&navId=49"
+    site = Site.get_or_create(
+        url=f"https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageSize=20&pageNo=1",
+        jump_base_url="https://www.binance.com/en/support/announcement/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="Binance",
+        sub_name="Latest News",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_binance_token_listing() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_binance_tokenlisting
+    item_client.save_item(rule)
+
+    original_url = "https://www.binance.com/en/support/announcement/new-cryptocurrency-listing?c=48&navId=48"
+    site = Site.get_or_create(
+        url=f"https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageSize=21&pageNo=1",
+        jump_base_url="https://www.binance.com/en/support/announcement/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="Binance",
+        sub_name="Token Listing",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
@@ -248,9 +335,9 @@ def make_blog_ethereum_request() -> list[RequestSite]:
 
 
 _request_list = [
-    globals()[func]()
-    for func in dir()
-    if callable(eval(func)) and func.startswith("make_")
+    # globals()[func]()
+    # for func in dir()
+    # if callable(eval(func)) and func.startswith("make_")
 ]
 
 
@@ -268,6 +355,10 @@ class SettingSites(BaseSettings):
         for site in sites:
             item_client.put_item(site.site)
             item_client.put_item(site.rule)
+        item_client.save()
+
+    def update_site(self, site: Site):
+        item_client.put_item(site)
         item_client.save()
 
     @classmethod
@@ -363,6 +454,10 @@ class RequestsTestCase(unittest.TestCase):
         req = make_news_8btc_request()
         ForumSpider(request_sites=req).start()
 
+    def test_news_defidao(self):
+        req = make_news_defidao_request()
+        ForumSpider(request_sites=req).start()
+
     def test_news_chaincatcher(self):
         req = make_news_chaincatcher_request()
         ForumSpider(request_sites=req).start()
@@ -373,6 +468,18 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_news_blockbeats_flash(self):
         req = make_news_blockbeats_flash()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_tokeninsight(self):
+        req = make_news_tokeningisht_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_binance_news(self):
+        req = make_cex_binance_news()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_binance_token_listing(self):
+        req = make_cex_binance_token_listing()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):
