@@ -166,6 +166,16 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # https://www.kucoin.com/_api/cms/articles?category=announcements&lang=en_US&page=1&pageSize=20
+    rule_cex_kucoin_announcements = MatchRule(
+        container="items",
+        title="title",
+        url="path",
+        rule_type=RuleType.json.value,
+        posted_at="publish_ts",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
