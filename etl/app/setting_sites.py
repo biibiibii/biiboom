@@ -303,6 +303,25 @@ def make_cex_binance_token_listing() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_cex_okx_news() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_okx_news
+    item_client.save_item(rule)
+
+    original_url = "https://www.okx.com/help-center/section/latest-announcements"
+    site = Site.get_or_create(
+        url=f"https://www.okx.com/v2/support/home/web",
+        jump_base_url="",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="OKX",
+        sub_name="Latest News",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -480,6 +499,10 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_cex_binance_token_listing(self):
         req = make_cex_binance_token_listing()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_okx_news(self):
+        req = make_cex_okx_news()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

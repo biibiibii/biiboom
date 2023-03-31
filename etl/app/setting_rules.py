@@ -156,6 +156,16 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # https://www.okx.com/help-center/section/latest-announcements
+    rule_cex_okx_news = MatchRule(
+        container="data.notices",
+        title="title",
+        url="shareLink",
+        rule_type=RuleType.json.value,
+        posted_at="publishDate",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
