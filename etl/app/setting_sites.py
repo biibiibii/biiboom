@@ -236,6 +236,34 @@ def make_news_blockbeats_flash() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_tokeningisht_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_tokeninsight
+    item_client.save_item(rule)
+
+    original_url = "https://tokeninsight.com/zh/research"
+    site = Site.get_or_create(
+        url=f"https://tokeninsight.com/apiv2/research/articleList",
+        jump_base_url="https://tokeninsight.com/zh/research/daily-digest/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="TokenInsight",
+        sub_name="研究",
+        tags=[SiteTagsEnum.NEWS.value],
+        request_method="post",
+        request_data={
+            "current": 1,
+            "language": "cn",
+            "pageSize": 15,
+            "tagId": "",
+            "type": 0,
+        },
+    )
+    item_client.save_item(site)
+
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -401,6 +429,10 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_news_blockbeats_flash(self):
         req = make_news_blockbeats_flash()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_tokeninsight(self):
+        req = make_news_tokeningisht_request()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

@@ -129,6 +129,15 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    rule_news_tokeninsight = MatchRule(
+        container="data.list",
+        title="title",
+        url="articleLink",
+        rule_type=RuleType.json.value,
+        posted_at="onlineTime",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json
