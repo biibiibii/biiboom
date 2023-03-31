@@ -92,7 +92,8 @@ class ForumSpider(feapder.AirSpider):
             yield feapder.Request(
                 item.site.url,
                 method=item.site.request_method,
-                data=item.site.request_data,
+                # data=item.site.request_data,
+                json=item.site.request_data,
                 request_site=item,
             )
 
