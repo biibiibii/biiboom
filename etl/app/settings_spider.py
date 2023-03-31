@@ -19,6 +19,7 @@ class SettingsSpider(BaseSettings):
         PGSQL_USER_NAME=settings.pgsql_user_name,
         PGSQL_USER_PASS=settings.pgsql_user_pass,
         LOG_LEVEL="INFO",
+        REQUEST_TIMEOUT=2,
     )
 
 
