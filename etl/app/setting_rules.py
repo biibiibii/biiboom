@@ -176,6 +176,16 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # https://www.mexc.com/help/announce/api/en-001/sections/360000679912/articles?page=1&per_page=30
+    rule_cex_mexc_announcements = MatchRule(
+        container="articles",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="created_at",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json

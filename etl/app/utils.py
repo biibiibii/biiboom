@@ -162,6 +162,8 @@ class UtilsTestCase(unittest.TestCase):
             Utils.to_utc_datetime(167973446600),
             datetime.datetime.fromisoformat("1975-04-29 03:17:26+00:00"),
         )
+        # 2023-03-15T07:28:51Z
+        # todo fix datetime error
         self.assertEqual(
             Utils.to_utc_datetime("2021-08-11T10:30:00Z"),
             datetime.datetime.fromisoformat("2021-08-11T10:30:00").astimezone(pytz.UTC),
