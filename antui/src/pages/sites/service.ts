@@ -9,7 +9,7 @@ export async function querySiteNodes(tag: string = ''): Promise<{ data: { site: 
   const payload = {
     query: `
 query GetSiteNodes {
-  site(limit: 30, where: {${filter}}, order_by: {name: desc}) {
+  site(limit: 30, where: {${filter}}, order_by: {name: asc}) {
     name
     sub_name
     original_url
