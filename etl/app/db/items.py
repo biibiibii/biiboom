@@ -69,7 +69,7 @@ class Site(UpdateItem):
     __update_key__ = ["next_update_time"]
     id: str
     url: str
-    jump_base_url: str = None
+    jump_base_url: str = ""
     rule_id: str
     language: str
     name: str

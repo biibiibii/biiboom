@@ -145,10 +145,11 @@ def make_news_jinse_request() -> list[RequestSite]:
 
 def make_news_8btc_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_8btc
+    setting_rules.update_rule(rule)
     original_url = "https://www.8btc.com/"
     site = Site.get_or_create(
         url=f"https://www.8btc.com/sitemap",
-        jump_base_url="https://www.8btc.com/",
+        jump_base_url=original_url,
         original_url=original_url,
         rule_id=rule.id,
         language=SiteLanguageEnum.ZH.value,
@@ -156,6 +157,25 @@ def make_news_8btc_request() -> list[RequestSite]:
         sub_name="资讯",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_news_defidao_request() -> list[RequestSite]:
+    rule = setting_rules.rule_news_8btc
+    item_client.save_item(rule)
+    original_url = "https://www.defidaonews.com/"
+    site = Site.get_or_create(
+        url=f"https://www.defidaonews.com/sitemap",
+        jump_base_url=original_url,
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="DeFi之道",
+        sub_name="资讯",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    item_client.save_item(site)
+
     return [RequestSite(site=site, rule=rule)]
 
 
@@ -270,6 +290,10 @@ class SettingSites(BaseSettings):
             item_client.put_item(site.rule)
         item_client.save()
 
+    def update_site(self, site: Site):
+        item_client.put_item(site)
+        item_client.save()
+
     @classmethod
     def get_next_updates(cls) -> list[RequestSite]:
         update_sites = SiteModel.select_next_updates()
@@ -361,6 +385,10 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_news_8btc(self):
         req = make_news_8btc_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_defidao(self):
+        req = make_news_defidao_request()
         ForumSpider(request_sites=req).start()
 
     def test_news_chaincatcher(self):

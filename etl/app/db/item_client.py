@@ -34,6 +34,14 @@ class ItemClient:
         self._item_buffer.flush()
         self._item_buffer.stop()
 
+    def save_item(self, item: Item):
+        self.put_item(item)
+        self.save()
+
+    def save_items(self, items: list[Item]):
+        self.put_items(items)
+        self.save()
+
 
 item_client = ItemClient()
 
