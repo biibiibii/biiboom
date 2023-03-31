@@ -156,6 +156,36 @@ class SettingRules(BaseSettings):
         extra={},
     )
 
+    # https://www.okx.com/help-center/section/latest-announcements
+    rule_cex_okx_news = MatchRule(
+        container="data.notices",
+        title="title",
+        url="shareLink",
+        rule_type=RuleType.json.value,
+        posted_at="publishDate",
+        extra={},
+    )
+
+    # https://www.kucoin.com/_api/cms/articles?category=announcements&lang=en_US&page=1&pageSize=20
+    rule_cex_kucoin_announcements = MatchRule(
+        container="items",
+        title="title",
+        url="path",
+        rule_type=RuleType.json.value,
+        posted_at="publish_ts",
+        extra={},
+    )
+
+    # https://www.mexc.com/help/announce/api/en-001/sections/360000679912/articles?page=1&per_page=30
+    rule_cex_mexc_announcements = MatchRule(
+        container="articles",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="created_at",
+        extra={},
+    )
+
     # bnbchain blog
     # https://bnbchain.org/en/blog/page-data/index/page-data.json
     # https://bnbchain.org/en/blog/page-data/page/2/page-data.json

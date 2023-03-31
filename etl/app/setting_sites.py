@@ -303,6 +303,120 @@ def make_cex_binance_token_listing() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_cex_okx_news() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_okx_news
+    item_client.save_item(rule)
+
+    original_url = "https://www.okx.com/help-center/section/latest-announcements"
+    site = Site.get_or_create(
+        url=f"https://www.okx.com/v2/support/home/web",
+        jump_base_url="",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="OKX",
+        sub_name="Latest News",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_kucoin_announcements() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_kucoin_announcements
+    item_client.save_item(rule)
+
+    original_url = "https://www.kucoin.com/news/categories/announcements"
+    site = Site.get_or_create(
+        url=f"https://www.kucoin.com/_api/cms/articles?category=announcements&lang=en_US&page=1&pageSize=20",
+        jump_base_url="https://www.kucoin.com/news",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="KuCoin",
+        sub_name="Announcements",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_kucoin_token_listing() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_kucoin_announcements
+    item_client.save_item(rule)
+
+    original_url = "https://www.kucoin.com/news/categories/listing"
+    site = Site.get_or_create(
+        url=f"https://www.kucoin.com/_api/cms/articles?category=listing&lang=en_US&page=1&pageSize=20",
+        jump_base_url="https://www.kucoin.com/news",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="KuCoin",
+        sub_name="Token Listing",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_kucoin_news() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_kucoin_announcements
+    item_client.save_item(rule)
+
+    original_url = "https://www.kucoin.com/news/categories/news"
+    site = Site.get_or_create(
+        url=f"https://www.kucoin.com/_api/cms/articles?category=news&lang=en_US&page=1&pageSize=20",
+        jump_base_url="https://www.kucoin.com/news",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="KuCoin",
+        sub_name="News",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_mexc_announcements() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_mexc_announcements
+    item_client.save_item(rule)
+    section_id = "360000679912"
+    original_url = f"https://www.mexc.com/support/sections/{section_id}"
+    site = Site.get_or_create(
+        url=f"https://www.mexc.com/help/announce/api/en-001/sections/{section_id}/articles?page=1&per_page=30",
+        jump_base_url="https://www.mexc.com/support/articles/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="Mexc",
+        sub_name="Announcements",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_cex_mexc_token_listing() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_mexc_announcements
+    item_client.save_item(rule)
+    section_id = "360000547811"
+    original_url = f"https://www.mexc.com/support/sections/{section_id}"
+    site = Site.get_or_create(
+        url=f"https://www.mexc.com/help/announce/api/en-001/sections/{section_id}/articles?page=1&per_page=30",
+        jump_base_url="https://www.mexc.com/support/articles/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="Mexc",
+        sub_name="Token Listing",
+        tags=[SiteTagsEnum.CEX.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -480,6 +594,30 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_cex_binance_token_listing(self):
         req = make_cex_binance_token_listing()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_okx_news(self):
+        req = make_cex_okx_news()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_kucoin_announcements(self):
+        req = make_cex_kucoin_announcements()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_kucoin_token_listing(self):
+        req = make_cex_kucoin_token_listing()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_kucoin_news(self):
+        req = make_cex_kucoin_news()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_mexc_announcements(self):
+        req = make_cex_mexc_announcements()
+        ForumSpider(request_sites=req).start()
+
+    def test_cex_mexc_token_listing(self):
+        req = make_cex_mexc_token_listing()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

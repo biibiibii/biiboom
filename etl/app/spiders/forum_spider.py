@@ -89,6 +89,7 @@ class ForumSpider(feapder.AirSpider):
     def start_requests(self):
         for item in self.request_nodes:
             logger.info(f"start request url: {item.site.url}")
+            # todo add request headers
             yield feapder.Request(
                 item.site.url,
                 method=item.site.request_method,
