@@ -180,6 +180,24 @@ def make_news_chaincatcher_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_news_blockbeats() -> list[RequestSite]:
+    rule = setting_rules.rule_news_blockbeats
+    setting_rules.update_rule(rule)
+
+    original_url = "https://www.theblockbeats.info/article"
+    site = Site.get_or_create(
+        url=f"https://api.theblockbeats.info/v3/Information/newsall?page=1",
+        jump_base_url="https://www.theblockbeats.info/news/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.ZH.value,
+        name="律动",
+        sub_name="文章",
+        tags=[SiteTagsEnum.NEWS.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
     original_url = "https://bnbchain.org/en/blog/"
@@ -329,6 +347,10 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_news_chaincatcher(self):
         req = make_news_chaincatcher_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_news_blockbeats(self):
+        req = make_news_blockbeats()
         ForumSpider(request_sites=req).start()
 
     def test_bnbchain_blog(self):

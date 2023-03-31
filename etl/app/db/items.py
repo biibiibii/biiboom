@@ -42,6 +42,8 @@ class MatchRule(Item):
             ]
         )
 
+    # todo create or update
+
     @property
     def fingerprint(self):
         return self.id
