@@ -49,11 +49,6 @@ class MatchRule(Item):
         return self.id
 
 
-class UrlNode(BaseModel):
-    url: str
-    jump_base_url: str = None
-
-
 class SiteLanguageEnum(Enum):
     EN = "en"
     ZH = "zh"
