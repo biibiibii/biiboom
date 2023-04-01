@@ -96,8 +96,11 @@ class Site(UpdateItem):
     def fingerprint(self):
         return self.id
 
-    def update_next_time(self):
-        self.next_update_time = int(time.time()) + self.update_rate
+    def update_next_time(self, exception=False):
+        if exception:
+            self.next_update_time = int(time.time()) + int(self.update_rate / 10)
+        else:
+            self.next_update_time = int(time.time()) + self.update_rate
 
     def pre_to_db(self):
         pass

@@ -3,7 +3,8 @@ from typing import Any
 
 import feapder
 
-from db.items import Site, RuleType, MatchRule, Node, RequestSite
+from db.items import Site, RuleType, Node, RequestSite, SiteLanguageEnum, SiteTagsEnum
+from setting_rules import setting_rules
 from settings import logger
 from settings_spider import settings_spider
 from utils import Utils
@@ -117,34 +118,36 @@ class ForumSpider(feapder.AirSpider):
         yield site
         # yield rule
 
+    def exception_request(self, request, response, e):
+        self._failed_update(request, response, e)
+
+    def failed_request(self, request, response, e):
+        self._failed_update(request, response, e)
+
+    def _failed_update(self, request, response, e):
+        logger.warning(f"failed: {e}")
+        site = request.request_site.site
+        site.update_next_time(exception=True)
+
 
 class ForumSpiderTestCase(unittest.TestCase):
     def test_json(self):
-        url = "https://forum.aptoslabs.com"
-        url = "https://forum.bnbchain.org"
-        # url = "https://forum.astar.network"
-        rule_item = MatchRule(
-            container="topic_list.topics",
-            title="title",
-            # url="slug",
-            url="id",
-            rule_type=RuleType.json.value,
-            posted_at="created_at",
-            extra={
-                "tags": "tags",
-            },
+        rule = setting_rules.rule_cex_mexc_announcements
+
+        section_id = "360000547811"
+        original_url = f"https://www.mexc.com/support/sections/{section_id}"
+        site = Site.get_or_create(
+            url=f"https://www.mexc.com/help/ance/api/en-001/sections/{section_id}/articles?page=1&per_page=30",
+            jump_base_url="https://www.mexc.com/support/articles/",
+            original_url=original_url,
+            rule_id=rule.id,
+            language=SiteLanguageEnum.EN.value,
+            name="Mexc",
+            sub_name="Token Listing",
+            tags=[SiteTagsEnum.CEX.value],
         )
-
-        site = Site(
-            url=f"{url}/latest.json?no_definitions=true&page=0",
-            jump_base_url=f"{url}/t/",
-            rule_id=rule_item.id,
-        )
-
-        request_site = RequestSite(site=site, rule=rule_item)
-        logger.debug(f"site:{site}")
-
-        ForumSpider(request_sites=[request_site]).start()
+        sites = [RequestSite(site=site, rule=rule)]
+        ForumSpider(request_sites=sites).start()
 
     def test_parse_jump_url(self):
         base_url = "https://news.marsbit.co/{id}.html"
