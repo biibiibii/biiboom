@@ -517,6 +517,18 @@ trio = ["trio (>=0.14,<0.23)"]
 wmi = ["wmi (>=1.5.1,<2.0.0)"]
 
 [[package]]
+name = "dpath"
+version = "2.1.5"
+description = "Filesystem-like pathing and searching for dictionaries"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "dpath-2.1.5-py3-none-any.whl", hash = "sha256:559edcbfc806ca2f9ad9e63566f22e5d41c000e4215bbce9dbf1ca4c859f5e0b"},
+    {file = "dpath-2.1.5.tar.gz", hash = "sha256:ccd964db839baad4aa820612b4b8731b09f40a245d401b723156ce4ef45b22b7"},
+]
+
+[[package]]
 name = "dynaconf"
 version = "3.1.12"
 description = "The dynamic configurator for your Python Project"
@@ -1971,4 +1983,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "3.9.16"
-content-hash = "507ef56e3306905c21e7967957ff3884f392dc01cd1a973df8435f83cd075ad0"
+content-hash = "c87fe333d87971226186901f979d7d6a650489afbc85205c9694a0674b94b661"

@@ -8,6 +8,7 @@ from hashlib import sha256
 from typing import Any
 from urllib.parse import urlparse
 
+import dpath
 import pytz
 
 from settings import logger
@@ -21,19 +22,13 @@ class Utils:
 
     @classmethod
     def json_path(cls, obj_dict: dict or list, string: str) -> Any:
-        if not string:
+        vals = dpath.values(obj_dict, string, separator=".")
+        if len(vals) <= 0:
             return None
-        k = string.split(".")
-        for item in k:
-            if item.isdigit() and isinstance(obj_dict, list):
-                item = int(item)
-            if item in obj_dict:
-                obj_dict = obj_dict[item]
-            elif isinstance(obj_dict, list) and item < len(obj_dict):
-                obj_dict = obj_dict[item]
-            else:
-                return None
-        return obj_dict
+        elif len(vals) == 1:
+            return vals[0]
+        else:
+            return vals
 
     @classmethod
     def get_name_from_url(cls, url: str) -> str:
@@ -105,7 +100,8 @@ class UtilsTestCase(unittest.TestCase):
             {
                 "a": {"1": 0},
                 "b": {"c": {"d": ["e", {"a": 1, "b": {"c": {"d": ["e", "f"]}}}]}},
-            }
+            },
+            {"tags": [{"alias": "a", "name": "1"}, {"alias": "b", "name": 2}]},
         ]
 
         self.assertEqual(
@@ -126,7 +122,9 @@ class UtilsTestCase(unittest.TestCase):
         # key not exist
         self.assertEqual(Utils.json_path(dict_or_list, "0.e"), None)
         # array index too big
-        self.assertEqual(Utils.json_path(dict_or_list, "1"), None)
+        self.assertEqual(Utils.json_path(dict_or_list, "2"), None)
+
+        self.assertEqual(Utils.json_path(dict_or_list, "1.tags.*.name"), ["1", 2])
 
     def test_get_name_from_url(self):
         forum_urls = [
