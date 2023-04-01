@@ -139,6 +139,10 @@ class RequestSite(BaseModel):
 
 
 class Node(UpdateItem):
+    """
+    Crawl data entity.
+    """
+
     __update_key__ = ["posted_at", "url", "title", "extra"]
     id: str
     site_id: str
@@ -159,7 +163,6 @@ class Node(UpdateItem):
     def pre_to_db(self):
         logger.debug(f"pre to db: {self.to_dict}")
         self.posted_at = Utils.to_utc_datetime(self.posted_at)
-
         logger.debug(f"pre to db: {self.to_dict}")
 
 

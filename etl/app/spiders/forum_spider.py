@@ -133,7 +133,7 @@ class ForumSpiderTestCase(unittest.TestCase):
         section_id = "360000547811"
         original_url = f"https://www.mexc.com/support/sections/{section_id}"
         site = Site.get_or_create(
-            url=f"https://www.mexc.com/help/ance/api/en-001/sections/{section_id}/articles?page=1&per_page=30",
+            url=f"https://www.mexc.com/help/announce/api/en-001/sections/{section_id}/articles?page=1&per_page=30",
             jump_base_url="https://www.mexc.com/support/articles/",
             original_url=original_url,
             rule_id=rule.id,
