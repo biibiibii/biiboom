@@ -80,6 +80,7 @@ class SiteModel(BaseExtModel):
                 cls.next_update_time <= int(time.time()),
                 cls.status == SiteStatusEnum.ABLE.value,
             )
+            .order_by(cls.next_update_time.asc())
             .limit(settings.page_size)
         )
 
