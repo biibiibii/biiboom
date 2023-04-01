@@ -64,6 +64,7 @@ class SiteModel(BaseExtModel):
     status: str = IntegerField(default=SiteStatusEnum.ABLE.value)
     request_method: str = CharField(default="get")
     request_data = JSONField(default=None)
+    request_error_count = IntegerField(default=0)
 
     rule: MatchRuleModel = ForeignKeyField(MatchRuleModel)
 

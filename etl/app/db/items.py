@@ -67,7 +67,7 @@ class SiteTagsEnum(Enum):
 
 
 class Site(UpdateItem):
-    __update_key__ = ["next_update_time"]
+    __update_key__ = ["next_update_time", "request_error_count"]
     id: str
     url: str
     jump_base_url: str = ""
@@ -82,7 +82,8 @@ class Site(UpdateItem):
     status: str = SiteStatusEnum.ABLE.value
 
     request_method: str = "get"
-    request_data = None
+    request_data: dict = None
+    request_error_count: int = 0
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
@@ -96,10 +97,19 @@ class Site(UpdateItem):
     def fingerprint(self):
         return self.id
 
-    def update_next_time(self, exception=False):
+    def request_callback(self, exception=False) -> None:
+        """
+        Crawl site fallback.
+        :param exception:
+        :return: None
+        """
         if exception:
-            self.next_update_time = int(time.time()) + int(self.update_rate / 10)
+            self.request_error_count = self.request_error_count + 1
+            self.next_update_time = int(time.time()) + (
+                int(self.update_rate / 10) * self.request_error_count
+            )
         else:
+            self.request_error_count = 0
             self.next_update_time = int(time.time()) + self.update_rate
 
     def pre_to_db(self):

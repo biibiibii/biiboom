@@ -3,6 +3,7 @@ from typing import Any
 
 import feapder
 
+from core.air_batch_spider import AirBatchSpider
 from db.items import Site, RuleType, Node, RequestSite, SiteLanguageEnum, SiteTagsEnum
 from setting_rules import setting_rules
 from settings import logger
@@ -78,7 +79,7 @@ def parse_json(request, response):
     return nodes
 
 
-class ForumSpider(feapder.AirSpider):
+class ForumSpider(AirBatchSpider):
     __custom_setting__ = settings_spider.feapder_settings
     logger.info(__custom_setting__)
 
@@ -100,7 +101,6 @@ class ForumSpider(feapder.AirSpider):
             )
 
     def parse(self, request, response):
-        # logger.debug(f"response: {response.text}")
         rule = request.request_site.rule
         site = request.request_site.site
 
@@ -113,21 +113,17 @@ class ForumSpider(feapder.AirSpider):
             raise NotImplementedError("only support html/json")
         for item in nodes:
             yield item
-        # Update next update time
-        site.update_next_time()
+        site.request_callback()
         yield site
-        # yield rule
-
-    def exception_request(self, request, response, e):
-        self._failed_update(request, response, e)
 
     def failed_request(self, request, response, e):
-        self._failed_update(request, response, e)
+        self._failed_callback(request, response, e)
 
-    def _failed_update(self, request, response, e):
-        logger.warning(f"failed: {e}")
+    def _failed_callback(self, request, response, e):
+        logger.warning(f"_failed_callback: {e}")
         site = request.request_site.site
-        site.update_next_time(exception=True)
+        site.request_callback(exception=True)
+        self.put_item(site)
 
 
 class ForumSpiderTestCase(unittest.TestCase):
@@ -146,6 +142,8 @@ class ForumSpiderTestCase(unittest.TestCase):
             sub_name="Token Listing",
             tags=[SiteTagsEnum.CEX.value],
         )
+        logger.debug(f"site: {site}")
+        # item_client.save_item(site)
         sites = [RequestSite(site=site, rule=rule)]
         ForumSpider(request_sites=sites).start()
 
