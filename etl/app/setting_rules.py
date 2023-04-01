@@ -31,8 +31,7 @@ class SettingRules(BaseSettings):
         rule_type=RuleType.json.value,
         posted_at="show_time",
         extra={
-            # todo support json array
-            "tags": "tags.0.tag_name",
+            "tags": "tags.*.tag_name",
         },
     )
 
