@@ -8,6 +8,7 @@ services:
     networks:
       - biiboom
     environment:
+      TZ: 'Asia/Shanghai'
       env: dev
 #      pgsql_ip: host.docker.internal
 networks:
