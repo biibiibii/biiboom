@@ -10,6 +10,7 @@ services:
     environment:
       TZ: 'Asia/Shanghai'
       env: dev
-#      pgsql_ip: host.docker.internal
+      http_proxy: host.docker.internal:7890
+      https_proxy: host.docker.internal:7890
 networks:
   biiboom:
