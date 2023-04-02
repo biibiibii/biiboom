@@ -8,12 +8,13 @@ import unittest
 from enum import Enum
 
 from peewee import Model, CharField, IntegerField, ForeignKeyField
-from playhouse.postgres_ext import PostgresqlExtDatabase, JSONField
+from playhouse.pool import PooledPostgresqlExtDatabase
+from playhouse.postgres_ext import JSONField
 from playhouse.shortcuts import model_to_dict
 
 from settings import settings, logger
 
-pgsql_db = PostgresqlExtDatabase(
+pgsql_db = PooledPostgresqlExtDatabase(
     settings.pgsql_db,
     user=settings.pgsql_user_name,
     password=settings.pgsql_user_pass,
