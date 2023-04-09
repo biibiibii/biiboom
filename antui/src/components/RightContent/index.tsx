@@ -7,7 +7,7 @@ import { CheckOutlined } from '@ant-design/icons';
 export type SiderTheme = 'light' | 'dark';
 
 const GlobalHeaderRight: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
     return null;
@@ -22,13 +22,17 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <Space className={className}>
-      {/* <Switch
+      <Switch
         checkedChildren={<CheckOutlined />}
         unCheckedChildren={<FormattedMessage id="component.globalHeader.darkTheme" />}
+        checkedChildren={<FormattedMessage id="component.globalHeader.lightTheme" />}
         onChange={(checked: boolean) => {
-          console.log(`switch to ${checked}`);
+          setInitialState({
+            ...initialState,
+            ...{ settings: { ...initialState.settings, navTheme: checked ? 'realDark' : 'light' } },
+          });
         }}
-      /> */}
+      />
       <SelectLang className={styles.action} />
     </Space>
   );
