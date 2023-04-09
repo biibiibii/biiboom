@@ -63,7 +63,6 @@ class Settings(BaseSettings):
 
 env_list = {
     "local": "./app/.local.env",
-    "dev": "./app/.dev.env",
     "prod": "./app/.prod.env",
 }
 env = os.getenv("env", "local")
