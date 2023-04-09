@@ -60,6 +60,7 @@ def make_news_chainfeeds_request() -> list[RequestSite]:
 
 def make_news_marbits_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_marsbit
+    item_client.save_item(rule)
     original_url = "https://www.marsbit.co/"
     site = Site.get_or_create(
         url=f"https://api.marsbit.co/info/news/shownews",
@@ -71,6 +72,7 @@ def make_news_marbits_request() -> list[RequestSite]:
         sub_name="新闻",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
@@ -147,7 +149,7 @@ def make_news_jinse_request() -> list[RequestSite]:
 
 def make_news_8btc_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_8btc
-    setting_rules.update_rule(rule)
+    item_client.save_item(rule)
     original_url = "https://www.8btc.com/"
     site = Site.get_or_create(
         url=f"https://www.8btc.com/sitemap",
@@ -159,6 +161,7 @@ def make_news_8btc_request() -> list[RequestSite]:
         sub_name="资讯",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 

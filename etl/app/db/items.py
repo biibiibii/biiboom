@@ -62,7 +62,7 @@ class SiteTagsEnum(Enum):
 
 
 class Site(UpdateItem):
-    __update_key__ = ["next_update_time", "request_error_count"]
+    __update_key__ = ["next_update_time", "request_error_count", "rule_id"]
     id: str
     url: str
     jump_base_url: str = ""
@@ -126,8 +126,14 @@ class Site(UpdateItem):
             # todo update
             if "rule" in model_dict:
                 del model_dict["rule"]
+            return cls.copy_value(kwargs, cls(**model_dict))
 
-            return cls(**model_dict)
+    @classmethod
+    def copy_value(cls, kwargs, instance: "Site") -> "Site":
+        for field in kwargs:
+            if kwargs[field] is not None:
+                setattr(instance, field, kwargs[field])
+        return instance
 
 
 class RequestSite(BaseModel):
