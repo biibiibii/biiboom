@@ -4,7 +4,7 @@ import unittest
 from enum import Enum
 from typing import Any
 
-from feapder import Item, UpdateItem
+from feapder import UpdateItem
 from playhouse.shortcuts import model_to_dict
 from pydantic import BaseModel
 
@@ -18,7 +18,16 @@ class RuleType(Enum):
     html = "html"
 
 
-class MatchRule(Item):
+class MatchRule(UpdateItem):
+    __update_key__ = [
+        "container",
+        "title",
+        "url",
+        "posted_at",
+        "extra",
+        "note",
+        "rule_type",
+    ]
     id: str
     container: str
     title: str
@@ -176,7 +185,7 @@ class NodeTestCase(unittest.TestCase):
     def test_datetime(self):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         print(datetime.datetime.utcnow())
-
+        
     def test_request_node(self):
         print(int(time.time()))
         pass

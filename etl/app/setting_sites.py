@@ -133,6 +133,7 @@ def make_news_panews_request() -> list[RequestSite]:
 
 def make_news_jinse_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_jinse
+    item_client.save_item(rule)
     original_url = "https://www.jinse.com/"
     site = Site.get_or_create(
         url=f"https://api.jinse.cn/noah/v3/timelines?catelogue_key=www&limit=50&information_id=&flag=down",
@@ -144,6 +145,7 @@ def make_news_jinse_request() -> list[RequestSite]:
         sub_name="头条",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
