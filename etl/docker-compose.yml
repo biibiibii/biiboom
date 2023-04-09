@@ -9,7 +9,7 @@ services:
       - biiboom
     environment:
       TZ: 'Asia/Shanghai'
-      env: dev
+      env: prod
       http_proxy: host.docker.internal:7890
       https_proxy: host.docker.internal:7890
 networks:
