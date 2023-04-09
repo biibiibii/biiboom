@@ -18,6 +18,8 @@ services:
   graphql-engine:
     image: hasura/graphql-engine:v2.21.0
     container_name: graphql-engine
+    depends_on:
+      - "pgbase-graphql"
     ports:
       - "6060:8080"
     restart: always
