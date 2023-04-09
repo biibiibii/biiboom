@@ -8,12 +8,13 @@ import unittest
 from enum import Enum
 
 from peewee import Model, CharField, IntegerField, ForeignKeyField
-from playhouse.postgres_ext import PostgresqlExtDatabase, JSONField
+from playhouse.pool import PooledPostgresqlExtDatabase
+from playhouse.postgres_ext import JSONField
 from playhouse.shortcuts import model_to_dict
 
 from settings import settings, logger
 
-pgsql_db = PostgresqlExtDatabase(
+pgsql_db = PooledPostgresqlExtDatabase(
     settings.pgsql_db,
     user=settings.pgsql_user_name,
     password=settings.pgsql_user_pass,
@@ -64,6 +65,7 @@ class SiteModel(BaseExtModel):
     status: str = IntegerField(default=SiteStatusEnum.ABLE.value)
     request_method: str = CharField(default="get")
     request_data = JSONField(default=None)
+    request_error_count = IntegerField(default=0)
 
     rule: MatchRuleModel = ForeignKeyField(MatchRuleModel)
 
@@ -80,6 +82,7 @@ class SiteModel(BaseExtModel):
                 cls.next_update_time <= int(time.time()),
                 cls.status == SiteStatusEnum.ABLE.value,
             )
+            .order_by(cls.next_update_time.asc())
             .limit(settings.page_size)
         )
 

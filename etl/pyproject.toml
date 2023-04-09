@@ -16,6 +16,7 @@ psycopg2-binary = "^2.9.5"
 peewee = "^3.16.0"
 apscheduler = "^3.10.1"
 pytz = "^2023.2"
+dpath = "^2.1.5"
 
 
 [build-system]

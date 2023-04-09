@@ -4,7 +4,7 @@ import unittest
 from enum import Enum
 from typing import Any
 
-from feapder import Item, UpdateItem
+from feapder import UpdateItem
 from playhouse.shortcuts import model_to_dict
 from pydantic import BaseModel
 
@@ -18,7 +18,16 @@ class RuleType(Enum):
     html = "html"
 
 
-class MatchRule(Item):
+class MatchRule(UpdateItem):
+    __update_key__ = [
+        "container",
+        "title",
+        "url",
+        "posted_at",
+        "extra",
+        "note",
+        "rule_type",
+    ]
     id: str
     container: str
     title: str
@@ -49,11 +58,6 @@ class MatchRule(Item):
         return self.id
 
 
-class UrlNode(BaseModel):
-    url: str
-    jump_base_url: str = None
-
-
 class SiteLanguageEnum(Enum):
     EN = "en"
     ZH = "zh"
@@ -67,7 +71,7 @@ class SiteTagsEnum(Enum):
 
 
 class Site(UpdateItem):
-    __update_key__ = ["next_update_time"]
+    __update_key__ = ["next_update_time", "request_error_count", "rule_id"]
     id: str
     url: str
     jump_base_url: str = ""
@@ -82,7 +86,8 @@ class Site(UpdateItem):
     status: str = SiteStatusEnum.ABLE.value
 
     request_method: str = "get"
-    request_data = None
+    request_data: dict = None
+    request_error_count: int = 0
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
@@ -96,8 +101,20 @@ class Site(UpdateItem):
     def fingerprint(self):
         return self.id
 
-    def update_next_time(self):
-        self.next_update_time = int(time.time()) + self.update_rate
+    def request_callback(self, exception=False) -> None:
+        """
+        Crawl site fallback.
+        :param exception:
+        :return: None
+        """
+        if exception:
+            self.request_error_count = self.request_error_count + 1
+            self.next_update_time = int(time.time()) + (
+                int(self.update_rate / 10) * self.request_error_count
+            )
+        else:
+            self.request_error_count = 0
+            self.next_update_time = int(time.time()) + self.update_rate
 
     def pre_to_db(self):
         pass
@@ -118,8 +135,14 @@ class Site(UpdateItem):
             # todo update
             if "rule" in model_dict:
                 del model_dict["rule"]
+            return cls.copy_value(kwargs, cls(**model_dict))
 
-            return cls(**model_dict)
+    @classmethod
+    def copy_value(cls, kwargs, instance: "Site") -> "Site":
+        for field in kwargs:
+            if kwargs[field] is not None:
+                setattr(instance, field, kwargs[field])
+        return instance
 
 
 class RequestSite(BaseModel):
@@ -131,6 +154,10 @@ class RequestSite(BaseModel):
 
 
 class Node(UpdateItem):
+    """
+    Crawl data entity.
+    """
+
     __update_key__ = ["posted_at", "url", "title", "extra"]
     id: str
     site_id: str
@@ -151,7 +178,6 @@ class Node(UpdateItem):
     def pre_to_db(self):
         logger.debug(f"pre to db: {self.to_dict}")
         self.posted_at = Utils.to_utc_datetime(self.posted_at)
-
         logger.debug(f"pre to db: {self.to_dict}")
 
 
@@ -159,7 +185,7 @@ class NodeTestCase(unittest.TestCase):
     def test_datetime(self):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         print(datetime.datetime.utcnow())
-
+        
     def test_request_node(self):
         print(int(time.time()))
         pass

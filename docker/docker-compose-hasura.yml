@@ -1,17 +1,32 @@
 version: "3.6"
 services:
+  pgbase-graphql:
+    container_name: hasura-pgbase-1
+    image: postgres:15.2
+    restart: always
+    ports:
+      - "8765:5432"
+    environment:
+      PGDATA: "/var/lib/postgresql/data"
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
   graphql-engine:
     image: hasura/graphql-engine:v2.21.0
     container_name: graphql-engine
+    depends_on:
+      - "pgbase-graphql"
     ports:
       - "6060:8080"
     restart: always
     environment:
       ## postgres database to store Hasura metadata
-      # HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
-      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://hasura:X11LC3dk3KncbsN434c5@hasura-pgbase-1:5432/hasura
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@hasura-pgbase-1:5432/${POSTGRES_DB}
       ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
-      PG_DATABASE_URL: postgres://hasura:X11LC3dk3KncbsN434c5@hasura-pgbase-1:5432/hasura
+      PG_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@hasura-pgbase-1:5432/${POSTGRES_DB}
       ## enable the console served by server
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
       ## enable debugging mode. It is recommended to disable this in production
@@ -20,6 +35,6 @@ services:
       ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
       # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
       ## uncomment next line to set an admin secret
-      HASURA_GRAPHQL_ADMIN_SECRET: 8i4rGgWSfRiG9PfcTTq8
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       #   HASURA_GRAPHQL_ENABLE_ALLOWLIST: true
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public

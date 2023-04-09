@@ -3,7 +3,9 @@ from typing import Any
 
 import feapder
 
-from db.items import Site, RuleType, MatchRule, Node, RequestSite
+from core.air_batch_spider import AirBatchSpider
+from db.items import Site, RuleType, Node, RequestSite, SiteLanguageEnum, SiteTagsEnum
+from setting_rules import setting_rules
 from settings import logger
 from settings_spider import settings_spider
 from utils import Utils
@@ -77,7 +79,7 @@ def parse_json(request, response):
     return nodes
 
 
-class ForumSpider(feapder.AirSpider):
+class ForumSpider(AirBatchSpider):
     __custom_setting__ = settings_spider.feapder_settings
     logger.info(__custom_setting__)
 
@@ -99,7 +101,6 @@ class ForumSpider(feapder.AirSpider):
             )
 
     def parse(self, request, response):
-        # logger.debug(f"response: {response.text}")
         rule = request.request_site.rule
         site = request.request_site.site
 
@@ -112,39 +113,39 @@ class ForumSpider(feapder.AirSpider):
             raise NotImplementedError("only support html/json")
         for item in nodes:
             yield item
-        # Update next update time
-        site.update_next_time()
+        site.request_callback()
         yield site
-        # yield rule
+
+    def failed_request(self, request, response, e):
+        self._failed_callback(request, response, e)
+
+    def _failed_callback(self, request, response, e):
+        logger.warning(f"_failed_callback: {e}")
+        site = request.request_site.site
+        site.request_callback(exception=True)
+        self.put_item(site)
 
 
 class ForumSpiderTestCase(unittest.TestCase):
     def test_json(self):
-        url = "https://forum.aptoslabs.com"
-        url = "https://forum.bnbchain.org"
-        # url = "https://forum.astar.network"
-        rule_item = MatchRule(
-            container="topic_list.topics",
-            title="title",
-            # url="slug",
-            url="id",
-            rule_type=RuleType.json.value,
-            posted_at="created_at",
-            extra={
-                "tags": "tags",
-            },
+        rule = setting_rules.rule_cex_mexc_announcements
+
+        section_id = "360000547811"
+        original_url = f"https://www.mexc.com/support/sections/{section_id}"
+        site = Site.get_or_create(
+            url=f"https://www.mexc.com/help/announce/api/en-001/sections/{section_id}/articles?page=1&per_page=30",
+            jump_base_url="https://www.mexc.com/support/articles/",
+            original_url=original_url,
+            rule_id=rule.id,
+            language=SiteLanguageEnum.EN.value,
+            name="Mexc",
+            sub_name="Token Listing",
+            tags=[SiteTagsEnum.CEX.value],
         )
-
-        site = Site(
-            url=f"{url}/latest.json?no_definitions=true&page=0",
-            jump_base_url=f"{url}/t/",
-            rule_id=rule_item.id,
-        )
-
-        request_site = RequestSite(site=site, rule=rule_item)
-        logger.debug(f"site:{site}")
-
-        ForumSpider(request_sites=[request_site]).start()
+        logger.debug(f"site: {site}")
+        # item_client.save_item(site)
+        sites = [RequestSite(site=site, rule=rule)]
+        ForumSpider(request_sites=sites).start()
 
     def test_parse_jump_url(self):
         base_url = "https://news.marsbit.co/{id}.html"

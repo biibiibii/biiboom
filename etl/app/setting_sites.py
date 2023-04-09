@@ -60,6 +60,7 @@ def make_news_chainfeeds_request() -> list[RequestSite]:
 
 def make_news_marbits_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_marsbit
+    item_client.save_item(rule)
     original_url = "https://www.marsbit.co/"
     site = Site.get_or_create(
         url=f"https://api.marsbit.co/info/news/shownews",
@@ -71,11 +72,13 @@ def make_news_marbits_request() -> list[RequestSite]:
         sub_name="新闻",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
 def make_news_odaily_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_odaily
+    item_client.save_item(rule)
     original_url = "https://www.odaily.news/"
     site = Site.get_or_create(
         url=f"https://www.odaily.news/api/pp/api/app-front/feed-stream?feed_id=280&b_id=&per_page=50",
@@ -87,6 +90,7 @@ def make_news_odaily_request() -> list[RequestSite]:
         sub_name="新闻",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
@@ -129,6 +133,7 @@ def make_news_panews_request() -> list[RequestSite]:
 
 def make_news_jinse_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_jinse
+    item_client.save_item(rule)
     original_url = "https://www.jinse.com/"
     site = Site.get_or_create(
         url=f"https://api.jinse.cn/noah/v3/timelines?catelogue_key=www&limit=50&information_id=&flag=down",
@@ -140,12 +145,13 @@ def make_news_jinse_request() -> list[RequestSite]:
         sub_name="头条",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
 def make_news_8btc_request() -> list[RequestSite]:
     rule = setting_rules.rule_news_8btc
-    setting_rules.update_rule(rule)
+    item_client.save_item(rule)
     original_url = "https://www.8btc.com/"
     site = Site.get_or_create(
         url=f"https://www.8btc.com/sitemap",
@@ -157,6 +163,7 @@ def make_news_8btc_request() -> list[RequestSite]:
         sub_name="资讯",
         tags=[SiteTagsEnum.NEWS.value],
     )
+    item_client.save_item(site)
     return [RequestSite(site=site, rule=rule)]
 
 
@@ -448,33 +455,7 @@ def make_blog_ethereum_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
-_request_list = [
-    # globals()[func]()
-    # for func in dir()
-    # if callable(eval(func)) and func.startswith("make_")
-]
-
-
 class SettingSites(BaseSettings):
-    @property
-    def request_sites(self) -> list[RequestSite]:
-        __site_list = []
-        for item in _request_list:
-            for i in item:
-                __site_list.append(i)
-        return __site_list
-
-    def update_sites(self):
-        sites = self.request_sites
-        for site in sites:
-            item_client.put_item(site.site)
-            item_client.put_item(site.rule)
-        item_client.save()
-
-    def update_site(self, site: Site):
-        item_client.put_item(site)
-        item_client.save()
-
     @classmethod
     def get_next_updates(cls) -> list[RequestSite]:
         update_sites = SiteModel.select_next_updates()
@@ -495,6 +476,7 @@ class SettingSites(BaseSettings):
                     rule=MatchRule(**model_to_dict(item.rule)),
                 )
             )
+
         return __site_list
 
 
@@ -512,14 +494,6 @@ class SiteModelTestCase(unittest.TestCase):
 class RequestsTestCase(unittest.TestCase):
     def setUp(self) -> None:
         # setting_sites.update_sites()
-        pass
-
-    def test_update_sites(self):
-        setting_sites.update_sites()
-
-    def test_merge_list(self):
-        logger.debug(f"{setting_sites.request_sites}")
-        setting_sites.update_sites()
         pass
 
     def test_get_next_updates(self):
