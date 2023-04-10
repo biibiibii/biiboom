@@ -1,7 +1,8 @@
 version: "3.3"
 services:
   biiboom_etl:
-    build: .
+    #    build: .
+    image: hk-biiboom-etl:latest
     container_name: biiboom-etl
     platform: linux/amd64
     restart: always
@@ -9,8 +10,7 @@ services:
       - biiboom
     environment:
       TZ: 'Asia/Shanghai'
-      env: prod
-      http_proxy: host.docker.internal:7890
-      https_proxy: host.docker.internal:7890
+    env_file:
+      - .env
 networks:
   biiboom:
