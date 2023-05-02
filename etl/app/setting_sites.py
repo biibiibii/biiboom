@@ -426,6 +426,7 @@ def make_cex_mexc_token_listing() -> list[RequestSite]:
 
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
+    item_client.save_item(rule)
     original_url = "https://bnbchain.org/en/blog/"
     site = Site.get_or_create(
         url=f"https://bnbchain.org/en/blog/page-data/index/page-data.json",
@@ -440,8 +441,27 @@ def make_blog_bnbchain_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_blog_binance_request() -> list[RequestSite]:
+    rule = setting_rules.rule_blog_binance
+    item_client.save_item(rule)
+    original_url = "https://www.binance.com/en/blog"
+    site = Site.get_or_create(
+        url=f"https://www.binance.com/bapi/composite/v1/public/content/blog/list?category=&tag=&page=1&size=20",
+        jump_base_url="https://www.binance.com/en/blog/a/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name=Utils.get_name_from_url(original_url),
+        sub_name="blog",
+        tags=[SiteTagsEnum.BLOG.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_ethereum_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_ethereum
+    item_client.save_item(rule)
+    # Get json data by html
     original_url = "https://blog.ethereum.org/"
     site = Site.get_or_create(
         url=f"https://blog.ethereum.org/_next/data/B4tauPzc7B80ozj3si_al/en.json",
@@ -601,6 +621,10 @@ class RequestsTestCase(unittest.TestCase):
     def test_ethereum_blog(self):
         ethereum = make_blog_ethereum_request()
         ForumSpider(request_sites=ethereum).start()
+
+    def test_binance_blog(self):
+        req = make_blog_binance_request()
+        ForumSpider(request_sites=req).start()
 
 
 if __name__ == "__main__":
