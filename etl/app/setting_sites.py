@@ -297,7 +297,7 @@ def make_cex_binance_token_listing() -> list[RequestSite]:
 
     original_url = "https://www.binance.com/en/support/announcement/new-cryptocurrency-listing?c=48&navId=48"
     site = Site.get_or_create(
-        url=f"https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageSize=21&pageNo=1",
+        url=f"https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageSize=15&pageNo=1",
         jump_base_url="https://www.binance.com/en/support/announcement/",
         original_url=original_url,
         rule_id=rule.id,
