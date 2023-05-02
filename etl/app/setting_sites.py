@@ -458,6 +458,25 @@ def make_blog_binance_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_blog_kucoin_request() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_kucoin_announcements
+    item_client.save_item(rule)
+
+    original_url = "https://www.kucoin.com/blog"
+    site = Site.get_or_create(
+        url=f"https://www.kucoin.com/_api/cms/articles?page=1&pageSize=20&type=3&lang=en_US",
+        jump_base_url="https://www.kucoin.com/blog",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="KuCoin",
+        sub_name="Blog",
+        tags=[SiteTagsEnum.BLOG.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_ethereum_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_ethereum
     item_client.save_item(rule)
@@ -624,6 +643,10 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_binance_blog(self):
         req = make_blog_binance_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_kucoin_blog(self):
+        req = make_blog_kucoin_request()
         ForumSpider(request_sites=req).start()
 
 
