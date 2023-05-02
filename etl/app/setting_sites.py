@@ -477,6 +477,25 @@ def make_blog_kucoin_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_blog_polkadot_request() -> list[RequestSite]:
+    rule = setting_rules.rule_blog_polkadot
+    item_client.save_item(rule)
+
+    original_url = "https://polkadot.network/blog/"
+    site = Site.get_or_create(
+        url=f"https://polkadot.network/page-data/blog/page-data.json",
+        jump_base_url="https://polkadot.network/blog/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name=Utils.get_name_from_url(original_url),
+        sub_name="Blog",
+        tags=[SiteTagsEnum.BLOG.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_ethereum_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_ethereum
     item_client.save_item(rule)
@@ -647,6 +666,10 @@ class RequestsTestCase(unittest.TestCase):
 
     def test_kucoin_blog(self):
         req = make_blog_kucoin_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_polkadot_blog(self):
+        req = make_blog_polkadot_request()
         ForumSpider(request_sites=req).start()
 
 

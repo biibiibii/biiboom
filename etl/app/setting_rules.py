@@ -222,6 +222,17 @@ class SettingRules(BaseSettings):
         },
     )
 
+    # https://polkadot.network/blog/
+    # https://polkadot.network/page-data/blog/page-data.json
+    rule_blog_polkadot = MatchRule(
+        container="result.data.posts.edges",
+        title="node.title",
+        url="node.slug",
+        rule_type=RuleType.json.value,
+        posted_at="node.published_at",
+        extra={},
+    )
+
     def update_rules(self):
         _rules = [self.dict().get(item) for item in self.dict()]
         logger.debug(f"all rules: {_rules}")
