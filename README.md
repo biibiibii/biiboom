@@ -5,6 +5,14 @@ push main branch of git will deploy frontend to PROD env
 PROD env is hosting on vercel.
 ```
 
+## Contribution Guide
+
+1. Pick or create an issue.
+2. Submit your code to the `dev` branch.
+3. Create a pull requests to `main` branch.
+
+That's all; enjoy coding.
+
 ## antui
 
 current frontend
@@ -13,9 +21,7 @@ current frontend
 
 data crawl and store
 
-## ui
-
-## Hasura
+## [Hasura](https://github.com/hasura/graphql-engine)
 
 API platform
 
@@ -36,5 +42,3 @@ apply migration to remote
 ```
 hasura migrate apply --endpoint http://3.143.126.224:6060 --admin-secret "<admin-secret>"
 ```
-
-``
