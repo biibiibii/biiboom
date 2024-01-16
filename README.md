@@ -13,11 +13,11 @@ PROD env is hosting on vercel.
 
 That's all; enjoy coding.
 
-## antui
+## [ui](./ui/README.md)
 
 current frontend
 
-## etl
+## [etl](./etl/README.md)
 
 data crawl and store
 

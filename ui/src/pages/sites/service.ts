@@ -14,7 +14,7 @@ query GetSiteNodes {
     sub_name
     original_url
     id
-    nodes(limit: 30, order_by: {posted_at: desc}) {
+    nodes(limit: 30, order_by: {posted_at: desc_nulls_last}) {
       url
       title
       posted_at

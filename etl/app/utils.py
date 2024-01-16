@@ -54,6 +54,7 @@ class Utils:
 
     @classmethod
     def is_utc_datetime(cls, dt: str) -> bool:
+        # 2021-08-11T10:30:00Z
         utc_pattern = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$"
         return re.match(utc_pattern, dt) is not None
 
@@ -68,7 +69,7 @@ class Utils:
             if cls.is_iso_datetime(dt):
                 dt = datetime.datetime.fromisoformat(dt).astimezone(pytz.UTC)
             elif cls.is_utc_datetime(dt):
-                dt = datetime.datetime.fromisoformat(dt.replace("Z", "")).astimezone(
+                dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S%z").astimezone(
                     pytz.UTC
                 )
         return dt
@@ -164,7 +165,7 @@ class UtilsTestCase(unittest.TestCase):
         # todo fix datetime error
         self.assertEqual(
             Utils.to_utc_datetime("2021-08-11T10:30:00Z"),
-            datetime.datetime.fromisoformat("2021-08-11T10:30:00").astimezone(pytz.UTC),
+            datetime.datetime.fromisoformat("2021-08-11T18:30:00").astimezone(pytz.UTC),
         )
         self.assertEqual(
             Utils.to_utc_datetime("2021-08-11T10:30:00"),

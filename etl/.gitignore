@@ -137,3 +137,5 @@ todo.md
 
 requirements.txt
 **.env
+deploy.sh
+build.sh

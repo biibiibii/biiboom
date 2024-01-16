@@ -196,6 +196,18 @@ class SettingRules(BaseSettings):
         posted_at="node.published_at",
         extra={},
     )
+    # binance blog
+    # https://www.binance.com/bapi/composite/v1/public/content/blog/list?category=&tag=&page=1&size=20
+    rule_blog_binance = MatchRule(
+        container="data.blogList",
+        title="title",
+        url="id",
+        rule_type=RuleType.json.value,
+        posted_at="postTime",
+        extra={
+            "tags": "tag.*.name",
+        },
+    )
 
     # https://blog.ethereum.org/
     # https://blog.ethereum.org/_next/data/4tYBiKFBGW9-G-BSIr4zA/en.json
@@ -208,6 +220,17 @@ class SettingRules(BaseSettings):
         extra={
             "tags": "frontmatter.category",
         },
+    )
+
+    # https://polkadot.network/blog/
+    # https://polkadot.network/page-data/blog/page-data.json
+    rule_blog_polkadot = MatchRule(
+        container="result.data.posts.edges",
+        title="node.title",
+        url="node.slug",
+        rule_type=RuleType.json.value,
+        posted_at="node.published_at",
+        extra={},
     )
 
     def update_rules(self):

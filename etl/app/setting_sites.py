@@ -297,7 +297,7 @@ def make_cex_binance_token_listing() -> list[RequestSite]:
 
     original_url = "https://www.binance.com/en/support/announcement/new-cryptocurrency-listing?c=48&navId=48"
     site = Site.get_or_create(
-        url=f"https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageSize=21&pageNo=1",
+        url=f"https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageSize=15&pageNo=1",
         jump_base_url="https://www.binance.com/en/support/announcement/",
         original_url=original_url,
         rule_id=rule.id,
@@ -426,6 +426,7 @@ def make_cex_mexc_token_listing() -> list[RequestSite]:
 
 def make_blog_bnbchain_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_bnbchain
+    item_client.save_item(rule)
     original_url = "https://bnbchain.org/en/blog/"
     site = Site.get_or_create(
         url=f"https://bnbchain.org/en/blog/page-data/index/page-data.json",
@@ -440,8 +441,65 @@ def make_blog_bnbchain_request() -> list[RequestSite]:
     return [RequestSite(site=site, rule=rule)]
 
 
+def make_blog_binance_request() -> list[RequestSite]:
+    rule = setting_rules.rule_blog_binance
+    item_client.save_item(rule)
+    original_url = "https://www.binance.com/en/blog"
+    site = Site.get_or_create(
+        url=f"https://www.binance.com/bapi/composite/v1/public/content/blog/list?category=&tag=&page=1&size=20",
+        jump_base_url="https://www.binance.com/en/blog/a/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name=Utils.get_name_from_url(original_url),
+        sub_name="blog",
+        tags=[SiteTagsEnum.BLOG.value],
+    )
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_blog_kucoin_request() -> list[RequestSite]:
+    rule = setting_rules.rule_cex_kucoin_announcements
+    item_client.save_item(rule)
+
+    original_url = "https://www.kucoin.com/blog"
+    site = Site.get_or_create(
+        url=f"https://www.kucoin.com/_api/cms/articles?page=1&pageSize=20&type=3&lang=en_US",
+        jump_base_url="https://www.kucoin.com/blog",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name="KuCoin",
+        sub_name="Blog",
+        tags=[SiteTagsEnum.BLOG.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
+def make_blog_polkadot_request() -> list[RequestSite]:
+    rule = setting_rules.rule_blog_polkadot
+    item_client.save_item(rule)
+
+    original_url = "https://polkadot.network/blog/"
+    site = Site.get_or_create(
+        url=f"https://polkadot.network/page-data/blog/page-data.json",
+        jump_base_url="https://polkadot.network/blog/",
+        original_url=original_url,
+        rule_id=rule.id,
+        language=SiteLanguageEnum.EN.value,
+        name=Utils.get_name_from_url(original_url),
+        sub_name="Blog",
+        tags=[SiteTagsEnum.BLOG.value],
+    )
+    item_client.save_item(site)
+    return [RequestSite(site=site, rule=rule)]
+
+
 def make_blog_ethereum_request() -> list[RequestSite]:
     rule = setting_rules.rule_blog_ethereum
+    item_client.save_item(rule)
+    # Get json data by html
     original_url = "https://blog.ethereum.org/"
     site = Site.get_or_create(
         url=f"https://blog.ethereum.org/_next/data/B4tauPzc7B80ozj3si_al/en.json",
@@ -601,6 +659,18 @@ class RequestsTestCase(unittest.TestCase):
     def test_ethereum_blog(self):
         ethereum = make_blog_ethereum_request()
         ForumSpider(request_sites=ethereum).start()
+
+    def test_binance_blog(self):
+        req = make_blog_binance_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_kucoin_blog(self):
+        req = make_blog_kucoin_request()
+        ForumSpider(request_sites=req).start()
+
+    def test_polkadot_blog(self):
+        req = make_blog_polkadot_request()
+        ForumSpider(request_sites=req).start()
 
 
 if __name__ == "__main__":

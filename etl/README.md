@@ -12,3 +12,11 @@ docker-compose up -d --build
 
 - using Item to store data
 - using peewee to query data
+
+## docker
+
+build image
+
+```shell
+./build.sh
+```
